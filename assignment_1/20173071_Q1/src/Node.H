@@ -11,7 +11,7 @@ struct ExpNode
 {
     string mToken;
     ExpNode* mNext;
-    inline ExpNode():mToken(""),mNext(nullptr){};
+    inline ExpNode():mToken(""),mNext(NULL){};
     inline ~ExpNode(){};
 };
 

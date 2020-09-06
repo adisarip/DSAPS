@@ -4,8 +4,7 @@
 using namespace std;
 
 ExpStack::ExpStack()
-:mHead(nullptr)
-,mCount(0)
+:mHead(NULL)
 {
 }
 
@@ -18,7 +17,7 @@ void ExpStack::push(string expTokenParm)
 {
     ExpNode* sNode = new ExpNode();
     sNode->mToken = expTokenParm;
-    if (0 == mCount)
+    if (NULL == mHead)
     {
         mHead = sNode;
     }
@@ -27,36 +26,33 @@ void ExpStack::push(string expTokenParm)
         sNode->mNext = mHead;
         mHead = sNode;
     }
-    mCount++;
 }
 
 string ExpStack::pop()
 {
     string sToken = "";
-    if (nullptr != mHead)
+    if (NULL != mHead)
     {
         ExpNode* sNode = mHead;
         sToken = sNode->mToken;
         mHead = sNode->mNext;
-        sNode->mNext = nullptr;
+        sNode->mNext = NULL;
         delete(sNode);
-        mCount--;
     }
     return sToken;
 }
 
 void ExpStack::clear()
 {
+    ExpNode* sNode = NULL;
     // delete all the elements in stack and deallocate their memory.
-    while(nullptr != mHead)
+    while(NULL != mHead)
     {
-        ExpNode* sNode = mHead;
+        sNode = mHead;
         mHead = sNode->mNext;
-        sNode->mNext = nullptr;
+        sNode->mNext = NULL;
         delete(sNode);
-        mCount--;
     }
-    cout << "Expression Stack Cleared" << endl;
 }
 
 void ExpStack::print()
@@ -64,17 +60,13 @@ void ExpStack::print()
     // Traverse and print the current stack
     ExpNode* sNode = mHead;
 
-    if (nullptr == sNode)
+    if (NULL == sNode)
     {
         cout << "Expression stack is empty" << endl;
         return;
     }
-    else
-    {
-        cout << "Stack size: " << mCount << endl;
-    }
 
-    while (nullptr != sNode)
+    while (NULL != sNode)
     {
         cout << sNode->mToken;
         sNode = sNode->mNext;

@@ -6,6 +6,7 @@ obj/*
 #misc
 cscope.out
 a.out
+DSAPS_Lab_2.txt
 
 # Prerequisites
 *.d

@@ -18,7 +18,7 @@ class Exp
 
   protected:
     // helper functions for evaluating expressions
-    void pCreateInfixExp();
+    void pTokenizeExp(); // creating tokenized infix expression
     void pConvertToPostfix();
 
   private:

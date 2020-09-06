@@ -21,7 +21,6 @@ class ExpStack
 
   private:
     ExpNode* mHead;
-    int      mCount;
 };
 
 #endif

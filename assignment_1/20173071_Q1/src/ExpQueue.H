@@ -23,7 +23,6 @@ class ExpQueue
   private:
     ExpNode* mHead;
     ExpNode* mTail;
-    int      mCount;
 };
 
 #endif
