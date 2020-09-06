@@ -43,9 +43,20 @@ string ExpQueue::dequeue()
         sToken = sNode->mToken;
         mHead = sNode->mNext;
         sNode->mNext = NULL;
+        mTail = (mHead == NULL) ? mHead : mTail;
         delete(sNode);
     }
     return sToken;
+}
+
+bool ExpQueue::isEmpty()
+{
+    bool sIsEmpty = false;
+    if (mHead == mTail && mHead == NULL)
+    {
+        sIsEmpty = true;
+    }
+    return sIsEmpty;
 }
 
 void ExpQueue::clear()

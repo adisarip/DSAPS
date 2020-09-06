@@ -55,6 +55,16 @@ void ExpStack::clear()
     }
 }
 
+bool ExpStack::isEmpty()
+{
+    bool sIsEmpty = false;
+    if (mHead == NULL)
+    {
+        sIsEmpty = true;
+    }
+    return sIsEmpty;
+}
+
 void ExpStack::print()
 {
     // Traverse and print the current stack

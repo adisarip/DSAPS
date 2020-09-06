@@ -1,5 +1,5 @@
 
-// A Stack implementation for storing operators for evaluating experssions
+// A Queue implementation for storing operators/operands for evaluating experssions
 // Base data structure: Singly Linked List
 
 #ifndef __EXPQUEUE__
@@ -19,6 +19,7 @@ class ExpQueue
     string dequeue();
     void clear();
     void print();
+    bool isEmpty();
 
   private:
     ExpNode* mHead;

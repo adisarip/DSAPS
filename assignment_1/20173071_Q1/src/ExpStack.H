@@ -18,6 +18,7 @@ class ExpStack
     string pop();
     void clear();
     void print();
+    bool isEmpty();
 
   private:
     ExpNode* mHead;

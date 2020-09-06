@@ -5,11 +5,11 @@
 #include "ExpQueue.H"
 using namespace std;
 
-class Exp
+class Expression
 {
   public:
-    Exp(string expStrParm);
-    ~Exp();
+    Expression(string expStrParm);
+    ~Expression();
 
     double evaluate();
     // Setter/getter methods
@@ -18,8 +18,10 @@ class Exp
 
   protected:
     // helper functions for evaluating expressions
-    void pTokenizeExp(); // creating tokenized infix expression
-    void pConvertToPostfix();
+    int precedence(string tokenParm);
+    void pTokenizeExpression(); // creating tokenized infix expression
+    void pConvertToPostfix();   // converting infix expression to postfix expresion
+    double pEvaluatePostfix();  // evaluate postfix expresion
 
   private:
     string    mExpStr;
