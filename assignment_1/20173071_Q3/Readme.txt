@@ -1,4 +1,4 @@
-Q1: Problem Statement:
+Q3: Problem Statement:
 ======================
 - Implementatgion of "deque" : "Doubly Ended Queue"
 - Deque is the same as dynamic arrays with the ability to resize itself
