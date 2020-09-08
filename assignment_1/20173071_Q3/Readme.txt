@@ -19,23 +19,73 @@ Implementation of deque must satisfy the following performance requirements:
 - back() - returns the last element(value) in the deque.
 - empty() - returns true if deque is empty else returns false.
 - size() - returns the current size of deque.
-- resize(x, d) - changes the size dynamically. If the new size is greater than
+- resize(x, d, direction) - changes the size dynamically. If the new size is greater than
   the current size of the deque, then fill the empty space with the default value d.
-  If the size is less then the current deque size delete elements from back.
+  By default -> "direction" will be from "REVERSE". If "direction" set to "FORWARD" elements will
+  be deleted or added at the front.
 - clear() - remove all elements of deque.
 - D[n] - returns the nth element of the deque.
+         If n<0 then traverse the deque in reverse. Eg: D[-1] = last element;
 
 
 Solution Outline:
 =================
+- Implemented a C++ Templates based generic Doubly ended queue.
 
 
 Source Code Tree:
 =================
+20173071_Q3
+├── Makefile
+├── Readme.txt
+├── bin
+│   └── deque
+├── obj
+│   └── EvalDeque.o
+└── src
+    ├── Deque.H
+    └── EvalDeque.C
+
+3 directories, 6 files
 
 
 Compilation Run:
 ================
+20173071_Q3$ make clean;make
+Cleaning all the object files and binaries.
+rm -f core ./obj/EvalDeque.o ./bin/deque
+g++ -Wall -std=c++1z -c src/EvalDeque.C -o obj/EvalDeque.o
+Compiled src/EvalDeque.C successfully.
+g++ ./obj/EvalDeque.o -o bin/deque
+Linking Complete.
+To start the file explorer run --> ./bin/deque
+20173071_Q3$
+
 
 Sample Execution Runs:
 ======================
+-> verify the sequence of operations from main() in EvalDeque.C file.
+
+20173071_Q3$ ./bin/deque
+Deque Created with 10 elements
+5 5 5 5 5 5 5 5 5 5
+5 5 5 5 5 5 5 5 5 5 10 15 16
+5 5 5 5 5 5 5 5 5 5 10 15 16 0 0 0 0 0 0 0
+5 5 5 5 5 5 5 5 5 5 10 15 16
+0 0 0 0 0 0 0 5 5 5 5 5 5 5 5 5 5 10 15 16
+5 5 5 5 5 5 5 5 5 5 10 15 16
+5
+16
+10
+Index out of range. Invalid Operation !
+-407410640
+Index out of range. Invalid Operation !
+-407410640
+5 5 5 5 5 5 5 5 5 5
+16 15 10 5 5 5 5 5 5 5 5 5 5
+5 5 5 5 5 5 5 5 5 5
+5
+5
+10
+Deque Cleared
+20173071_Q3$

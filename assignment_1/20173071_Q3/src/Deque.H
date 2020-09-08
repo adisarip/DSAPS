@@ -7,10 +7,15 @@
 #include <iostream>
 using namespace std;
 
+const int FORWARD = 1;
+const int REVERSE = -1;
+
 template <class T>
 class Node
 {
   public:
+    inline Node():mPrev(NULL),mNext(NULL){};
+    inline ~Node(){};
     T mData;
     Node<T>* mPrev;
     Node<T>* mNext;
@@ -24,16 +29,21 @@ class Deque
     Deque(int sizeParm, T fillParm);
     ~Deque();
     void print();
-    int push_back(const T&);
-    int pop_back();
-    int push_front(const T&);
-    int pop_front();
+    void push_back(const T& dataParm);
+    void pop_back();
+    void push_front(const T& dataParm);
+    void pop_front();
     T front();
     T back();
     bool isEmpty();
     int size();
-    int resize(int sizeParm, T fillParm);
     void clear();
+    T& operator[](int i);
+
+    void resize(int sizeParm,
+                T fillParm,
+                const int directionParm = REVERSE);
+
   private:
     int      mSize;
     T        mFront;
@@ -48,6 +58,7 @@ Deque<T>::Deque()
 ,mHead(NULL)
 ,mTail(NULL)
 {
+    cout << "Deque Created" << endl;
 }
 
 template <class T>
@@ -55,25 +66,136 @@ Deque<T>::Deque(int sizeParm, T fillParm)
 :mSize(sizeParm)
 {
     // create the first node
-    Node<T>* sNode = new Node<T>();
-    sNode->mData = fillParm;
-    mHead = sNode;
-    mTail = sNode;
+    mHead = new Node<T>();
+    mHead->mData = fillParm;
+    mTail = mHead;
 
     // create the remaining nodes
     for (int i=1; i<sizeParm; i++)
     {
         Node<T>* sNode = new Node<T>();
         sNode->mData = fillParm;
-        sNode->mNext = NULL;
         mTail->mNext = sNode;
+        sNode->mPrev = mTail;
         mTail = sNode;
     }
+    mSize = sizeParm;
+    cout << "Deque Created with " << mSize << " elements" << endl;
 }
 
 template <class T>
 Deque<T>::~Deque()
 {
+    this->clear();
+}
+
+template <class T>
+void Deque<T>::resize(int sizeParm,
+                      T fillParm,
+                      const int directionParm)
+{
+    if (mSize < sizeParm)
+    {
+        int sCount = sizeParm - mSize;
+        if (directionParm == FORWARD)
+        {
+            // add nodes at front
+            for (int i=0; i<sCount; i++)
+            {
+                this->push_front(fillParm);
+            }
+        }
+        else
+        {
+            // add nodes at back - default
+            for (int i=0; i<sCount; i++)
+            {
+                this->push_back(fillParm);
+            }
+        }
+    }
+    else if (mSize > sizeParm)
+    {
+        int sCount = mSize - sizeParm;
+        if (directionParm == FORWARD)
+        {
+            // delete from front
+            for (int i=0; i<sCount; i++)
+            {
+                this->pop_front();
+            }
+        }
+        else
+        {
+            // delete from back - default
+            for (int i=0; i<sCount; i++)
+            {
+                this->pop_back();
+            }
+        }
+    }
+}
+
+template <class T>
+void Deque<T>::push_back(const T& dataParm)
+{
+    Node<T>* sNode = new Node<T>();
+    sNode->mData = dataParm;
+    if (mSize == 0)
+    {
+        mHead = sNode;
+        mTail = sNode;
+    }
+    else
+    {
+        mTail->mNext = sNode;
+        sNode->mPrev = mTail;
+        mTail = sNode;
+    }
+    mSize++;
+}
+
+template <class T>
+void Deque<T>::pop_back()
+{
+    Node<T>* sNode = mTail;
+    mTail = mTail->mPrev;
+    mTail->mNext = NULL;
+    sNode->mPrev = NULL;
+    sNode->mNext = NULL;
+    delete(sNode);
+    mSize--;
+}
+
+template <class T>
+void Deque<T>::push_front(const T& dataParm)
+{
+    Node<T>* sNode = new Node<T>();
+    sNode->mData = dataParm;
+    if (mSize == 0)
+    {
+        mHead = sNode;
+        mTail = sNode;
+    }
+    else
+    {
+        mHead->mPrev = sNode;
+        sNode->mNext = mHead;
+        mHead = sNode;
+    }
+    mSize++;
+}
+
+template <class T>
+void Deque<T>::pop_front()
+{
+    Node<T>* sNode = mHead;
+    mHead = mHead->mNext;
+    mHead->mPrev = NULL;
+    sNode->mPrev = NULL;
+    sNode->mNext = NULL;
+    delete(sNode);
+    mSize--;
 }
 
 template <class T>
@@ -100,56 +222,65 @@ void Deque<T>::clear()
         sNode->mNext = NULL;
         delete(sNode);
     }
-}
-
-template <class T>
-int Deque<T>::resize(int sizeParm, T fillParm)
-{
-    return 0;
-}
-
-template <class T>
-int Deque<T>::push_back(const T&)
-{
-    return 0;
-}
-
-template <class T>
-int Deque<T>::pop_back()
-{
-    return 0;
-}
-
-template <class T>
-int Deque<T>::push_front(const T&)
-{
-    return 0;
-}
-
-template <class T>
-int Deque<T>::pop_front()
-{
-    return 0;
+    mSize = 0;
+    cout << "Deque Cleared" << endl;
 }
 
 template <class T>
 T Deque<T>::front()
 {
-    T sRetVal;
-    return sRetVal;
+    return mHead->mData;
 }
 
 template <class T>
 T Deque<T>::back()
 {
-    T sRetVal;
-    return sRetVal;
+    return mTail->mData;
 }
 
 template <class T>
-bool isEmpty()
+T& Deque<T>::operator[](int indexParm)
 {
-    return true;
+    T sTmp;
+    T& sRetValue = sTmp;
+    if (mSize == 0)
+    {
+        cout << "Deque is Empty. Invalid Operation !" << endl;
+    }
+    else if (indexParm >= mSize || indexParm < -mSize)
+    {
+        cout << "Index out of range. Invalid Operation !" << endl;
+    }
+    else
+    {
+        if (indexParm >=0)
+        {
+            Node<T>* sNode = mHead;
+            for (int i=0; i<indexParm; i++)
+            {
+                sNode = sNode->mNext;
+            }
+            sRetValue = sNode->mData;
+        }
+        else
+        {
+            Node<T>* sNode = mTail;
+            int sIndex = -1-indexParm;
+            for (int i=0; i<sIndex; i++)
+            {
+                sNode = sNode->mPrev;
+            }
+            sRetValue = sNode->mData;
+        }
+    }
+    return sRetValue;
+}
+
+template <class T>
+bool Deque<T>::isEmpty()
+{
+    bool sIsEmpty = (mSize == 0) ? true : false;
+    return sIsEmpty;
 }
 
 template <class T>
