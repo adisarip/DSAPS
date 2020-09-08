@@ -63,7 +63,7 @@ g++ -Wall -std=c++1z -c src/Expression.C -o obj/Expression.o
 Compiled src/Expression.C successfully.
 g++ ./obj/ExpEval.o ./obj/ExpQueue.o ./obj/ExpStack.o ./obj/Expression.o -o bin/eval
 Linking Complete.
-To start the file explorer run --> ./bin/eval
+To start the "Expression Evaluator" run --> ./bin/eval
 20173071_Q1$
 
 

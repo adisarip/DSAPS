@@ -9,15 +9,15 @@ Q1: Problem Statement:
 
 Implementation of deque must satisfy the following performance requirements:
 ----------------------------------------------------------------------------
-- deque() - initialize a blank deque.
-- deque(n,x) - initialize a deque of length n with all values as x.
+- Deque() - initialize a blank deque.
+- Deque(n,x) - initialize a deque of length n with all values as x.
 - push_back(x) - append data x at the end.
 - pop_back() - erase data at the end.
 - push_front(x) - append data x at the beginning.
 - pop_front() - erase data at the beginning.
 - front() - returns the first element(value) in the deque.
 - back() - returns the last element(value) in the deque.
-- empty() - returns true if deque is empty else returns false.
+- isEmpty() - returns true if deque is empty else returns false.
 - size() - returns the current size of deque.
 - resize(x, d, direction) - changes the size dynamically. If the new size is greater than
   the current size of the deque, then fill the empty space with the default value d.
@@ -39,14 +39,16 @@ Source Code Tree:
 ├── Makefile
 ├── Readme.txt
 ├── bin
+│   ├── Readme.txt
 │   └── deque
 ├── obj
-│   └── EvalDeque.o
+│   ├── EvalDeque.o
+│   └── Readme.txt
 └── src
     ├── Deque.H
     └── EvalDeque.C
 
-3 directories, 6 files
+3 directories, 8 files
 
 
 Compilation Run:
@@ -58,7 +60,7 @@ g++ -Wall -std=c++1z -c src/EvalDeque.C -o obj/EvalDeque.o
 Compiled src/EvalDeque.C successfully.
 g++ ./obj/EvalDeque.o -o bin/deque
 Linking Complete.
-To start the file explorer run --> ./bin/deque
+To start the "Doubly Ended Queue" run --> ./bin/deque
 20173071_Q3$
 
 
