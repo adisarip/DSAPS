@@ -15,15 +15,15 @@ SRCDIR  = ./src
 OBJDIR  = ./obj
 BINDIR  = ./bin
 
-FILES   := $(wildcard $(SRCDIR)/*.C)
-OBJECTS := $(FILES:$(SRCDIR)/%.C=$(OBJDIR)/%.o)
+FILES   := $(wildcard $(SRCDIR)/*.cc)
+OBJECTS := $(FILES:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@
 	@echo "Linking Complete."
 	@echo "To start the \"BigInteger\" run --> "$(BINDIR)"/"$(TARGET)
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.C
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cc
 	$(CC) $(CCFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully."
 

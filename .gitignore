@@ -1,7 +1,6 @@
 #directories
-test_programs/*
-bin/*
-obj/*
+test_programs/
+bkp_src/
 
 #misc
 cscope.out
