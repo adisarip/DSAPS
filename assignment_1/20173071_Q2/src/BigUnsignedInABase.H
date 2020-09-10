@@ -48,8 +48,7 @@ class BigUnsignedInABase : public NumberBlockArray<unsigned short>
     ~BigUnsignedInABase() {}
 
     // LINKS TO BIGUNSIGNED
-    BigUnsignedInABase(const BigUnsigned &x, Base base);
-    BigUnsignedInABase(const BigUnsigned &x);
+    BigUnsignedInABase(const BigUnsigned &x, Base base=10);
     operator BigUnsigned() const;
 
     // LINKS TO STRINGS
@@ -61,8 +60,7 @@ class BigUnsignedInABase : public NumberBlockArray<unsigned short>
     // All string representations are big-endian (big-place-value digits
     // first).
     operator std::string() const;
-    BigUnsignedInABase(const std::string &s, Base base);
-    BigUnsignedInABase(const std::string &s);
+    BigUnsignedInABase(const std::string &s, Base base=10);
 
     // ACCESSORS
     Base getBase() const { return base; }

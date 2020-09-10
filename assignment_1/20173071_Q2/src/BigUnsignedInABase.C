@@ -77,11 +77,6 @@ BigUnsignedInABase::BigUnsignedInABase(const BigUnsigned &x, Base base)
     len = digitNum;
 }
 
-BigUnsignedInABase::BigUnsignedInABase(const BigUnsigned &x)
-{
-    BigUnsignedInABase(x, 10);
-}
-
 BigUnsignedInABase::operator BigUnsigned() const
 {
     BigUnsigned ans, buBase(base), temp;
@@ -134,16 +129,11 @@ BigUnsignedInABase::BigUnsignedInABase(const std::string &s, Base base)
     trimLeadingZeros();
 }
 
-BigUnsignedInABase::BigUnsignedInABase(const std::string &s)
-{
-    BigUnsignedInABase(s, 10);
-}
-
 BigUnsignedInABase::operator std::string() const
 {
     if (base > 10)
     {
-        cout << "[ERROR] The default string conversion not supported for base >10";
+        cout << "[ERROR] The default string conversion not supported for base (>10): " << base << endl;
         return std::string("Invalid Base");
     }
     if (len == 0)

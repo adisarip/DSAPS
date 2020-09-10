@@ -3,8 +3,8 @@
 // Standard libraries
 #include <string>
 #include <iostream>
-
 #include "BigIntegerUtils.H"
+using namespace std;
 
 int main()
 {
@@ -26,14 +26,11 @@ int main()
     BigUnsigned d(_d);
 
     // Instead you can convert the number from a string.
-    //std::string s("3141592653589793238462643383279");
-    //BigUnsigned f = stringToBigInteger(s);
+    string s("314159265358979323846264338327964286823462424629462946284623894623946923846923");
+    BigUnsigned b1 = stringToBigUnsigned(s);
 
-    // You can convert the other way too.
-    //std::string s2 = bigIntegerToString(f);
-
-    // f is implicitly stringified and sent to std::cout.
-    //std::cout << f << std::endl;
+    // f is implicitly stringified and sent to cout.
+    cout << b1 * b1 * b1 * b1 << endl;
 
     /* Let's do some math!  The library overloads most of the
      * mathematical operators (including assignment operators) to
@@ -44,11 +41,11 @@ int main()
     unsigned long _g = 314159;
     unsigned long _h = 265;
     BigUnsigned g(_g), h(_h);
-    std::cout << (g + h) << '\n'
+    cout << (g + h) << '\n'
               << (g - h) << '\n'
               << (g * h) << '\n'
               << (g / h) << '\n'
-              << (g % h) << std::endl;
+              << (g % h) << endl;
 
     // Let's do some heavy lifting and calculate powers of 314.
     int maxPower = 10;
@@ -57,14 +54,14 @@ int main()
     BigUnsigned result(_result), big314(_big314);
     for (int power = 0; power <= maxPower; power++)
     {
-        std::cout << "314^" << power << " = " << result << std::endl;
+        cout << "314^" << power << " = " << result << endl;
         result = result * big314; // A BigInteger assignment operator
     }
 
     // Some big-integer algorithms (albeit on small integers).
-    //std::cout << gcd(BigUnsigned(60), 72) << '\n'
+    //cout << gcd(BigUnsigned(60), 72) << '\n'
     //    << modinv(BigUnsigned(7), 11) << '\n'
-    //    << modexp(BigUnsigned(314), 159, 2653) << std::endl;
+    //    << modexp(BigUnsigned(314), 159, 2653) << endl;
 
     // Add your own code here to experiment with the library.
 
