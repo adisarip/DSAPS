@@ -1,0 +1,6 @@
+
+Commands to build binaries
+
+g++ -Wall -std=c++1z 20173071_Q1.C -o expeval
+g++ -Wall -std=c++1z 20173071_Q2.C -o bigint
+g++ -Wall -std=c++1z 20173071_Q3.C -o deque
