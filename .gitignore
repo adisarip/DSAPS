@@ -1,6 +1,7 @@
 #directories
 test_programs/
 bkp_src/
+bkp_functs.txt
 
 #misc
 cscope.out
