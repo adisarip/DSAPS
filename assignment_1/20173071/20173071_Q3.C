@@ -56,7 +56,6 @@ Deque<T>::Deque()
 ,mHead(NULL)
 ,mTail(NULL)
 {
-    cout << "Deque Created" << endl;
 }
 
 template <class T>
@@ -78,7 +77,6 @@ Deque<T>::Deque(int sizeParm, T fillParm)
         mTail = sNode;
     }
     mSize = sizeParm;
-    cout << "Deque Created with " << mSize << " elements" << endl;
 }
 
 template <class T>
@@ -221,7 +219,6 @@ void Deque<T>::clear()
         delete(sNode);
     }
     mSize = 0;
-    cout << "Deque Cleared" << endl;
 }
 
 template <class T>
@@ -289,42 +286,144 @@ int Deque<T>::size()
 
 
 //============ Driver Program ==============//
+// The following represent the corresponding query number for each function:
+// 1. push_front(x)
+// 2. pop_front()
+// 3. push_back(x)
+// 4. pop_back()
+// 5. deque()
+// 6. deque(n,x)
+// 7. front()
+// 8. back()
+// 9. empty()
+// 10. size()
+// 11. resize(x, d)
+// 12. clear()
+// 13. D[n]
+// 14. display() - display contents of deque
+// Your task is to take Q queries as input and perform the corresponding
+// function and display the output.
+
+// Input format:
+// =============
+// First Line contains the query count Q
+// Next Q lines contain the query no and input( if any)
+
+// Output format:
+// ==============
+// Q-1 lines displaying queue after each query
+// NOTE: for correct execution, the first query will be always deque() or deque(n,x)
+// Output for first query is not required as deque() will be empty
+
+// Sample Input:
+// =============
+// 6
+// 5
+// 1 2
+// 1 3
+// 3 4
+// 7
+// 10
+
+// Sample Output:
+// ==============
+// 2
+// 3 2
+// 3 2 4
+// 3
+// 3
 
 int main (int argc, char* argv[])
 {
-    Deque<int> deque(10, 5);
-    deque.print();
-    deque.push_back(10);
-    deque.push_back(15);
-    deque.push_back(16);
-    deque.print();
-    deque.resize(20, 0);
-    deque.print();
-    deque.resize(13, 0);
-    deque.print();
-    deque.resize(20, 0, FORWARD);
-    deque.print();
-    deque.resize(13, 0, FORWARD);
-    deque.print();
-    cout << deque[0] << endl;
-    cout << deque[-1] << endl;
-    cout << deque[-3] << endl;
-    cout << deque[-14] << endl;
-    cout << deque[13] << endl;
-    deque.pop_back();
-    deque.pop_back();
-    deque.pop_back();
-    deque.print();
-    deque.push_front(10);
-    deque.push_front(15);
-    deque.push_front(16);
-    deque.print();
-    deque.pop_front();
-    deque.pop_front();
-    deque.pop_front();
-    deque.print();
-    cout << deque.front() << endl;
-    cout << deque.back() << endl;
-    cout << deque.size() << endl;
+    int Q = 0;
+    int cmd = 0;
+    int x = 0; int n = 0;
+    Deque<int> deque;
+
+    cin >> Q; // read number of queries
+    cin >> cmd; // first query to create the Deque
+    if (cmd == 5)
+    {
+        // created already
+    }
+    else if (cmd == 6)
+    {
+        cin >> n >> x;
+        deque.resize(n,x);
+    }
+    else
+    {
+        // Invalid Command - create the deque first.
+        return 0;
+    }
+
+    for (int i=0; i<Q-1; i++)
+    {
+        cin >> cmd;
+        switch (cmd)
+        {
+            case 1:
+                // push_front(x)
+                cin >> x;
+                deque.push_front(x);
+                deque.print();
+                break;
+            case 2:
+                // pop_front(x)
+                deque.pop_front();
+                deque.print();
+                break;
+            case 3:
+                // push_back(x)
+                cin >> x;
+                deque.push_back(x);
+                deque.print();
+                break;
+            case 4:
+                // pop_back(x)
+                deque.pop_back();
+                deque.print();
+                break;
+            case 7:
+                // front()
+                cout << deque.front() << endl;
+                break;
+            case 8:
+                // back()
+                cout << deque.back() << endl;
+                break;
+            case 9:
+                // empty()
+                cout << deque.isEmpty() << endl;
+                break;
+            case 10:
+                // size()
+                cout << deque.size() << endl;
+                break;
+            case 11:
+                // resize(size,d)
+                cin >> n >> x;
+                deque.resize(n,x);
+                deque.print();
+                break;
+            case 12:
+                // clear()
+                deque.clear();
+                deque.print();
+                break;
+            case 13:
+                // D[n]
+                cin >> n;
+                cout << deque[n] << endl;
+                break;
+            case 14:
+                // display()
+                deque.print();
+                break;
+            default:
+                break;
+        };
+    }
+
     return 0;
 }

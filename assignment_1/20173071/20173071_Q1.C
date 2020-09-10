@@ -107,7 +107,6 @@ void ExpStack::print()
 
     if (NULL == sNode)
     {
-        cout << "Expression stack is empty" << endl;
         return;
     }
 
@@ -221,7 +220,6 @@ void ExpQueue::print()
 
     if (sNode == NULL)
     {
-        cout << "Expression queue is empty" << endl;
         return;
     }
 
@@ -340,9 +338,6 @@ void Expression::pTokenizeExpression()
         sInfixToken = mExpStr[sExpSize-1];
     }
     mInfixExp->enqueue(sInfixToken);
-    cout << "Infix Expression:" << endl;
-    mInfixExp->print();
-    cout << endl;
 }
 
 int Expression::precedence(string tokenParm)
@@ -421,10 +416,6 @@ void Expression::pConvertToPostfix()
     }
     delete(sExpStack);
 
-    cout << "Postfix Expression:" << endl;
-    sPostfixExp->print();
-    cout << endl;
-
 }
 
 double Expression::pEvaluatePostfix()
@@ -480,10 +471,9 @@ int main (int argc, char* argv[])
 {
     // reading the infix expression
     string sExpStr;
-    cout << "Enter your expression:" << endl;
     getline(cin, sExpStr);
 
     Expression sExpression(sExpStr);
     double sResult = sExpression.evaluate(); // evaluate the expresion
-    cout << "Result: " << sResult << endl;
+    cout << sResult << endl;
 }
