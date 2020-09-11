@@ -20,8 +20,6 @@ BigIntegerIO::BigIntegerIO(const Digit *d, Index l, Base base)
             cout << "[ERROR] A digit is too large for the specified base(1)" << endl;
         }
     }
-
-    // Eliminate any leading zeros we may have been passed.
     trimLeadingZeros();
 }
 
@@ -29,13 +27,13 @@ namespace
 {
     unsigned int bitLen(unsigned int x)
     {
-        unsigned int len = 0;
+        unsigned int length = 0;
         while (x > 0)
         {
             x >>= 1;
-            len++;
+            length++;
         }
-        return len;
+        return length;
     }
     unsigned int ceilingDiv(unsigned int a, unsigned int b)
     {
@@ -58,30 +56,28 @@ BigIntegerIO::BigIntegerIO(const BigInteger &x, Base base)
     int maxBitLenOfX = x.getLength() * BigInteger::N;
     int minBitsPerDigit = bitLen(base) - 1;
     int maxDigitLenOfX = ceilingDiv(maxBitLenOfX, minBitsPerDigit);
-    len = maxDigitLenOfX; // Another change to comply with `staying in bounds'.
-    allocate(len); // Get the space
+    mLength = maxDigitLenOfX;
+    allocate(mLength);
 
     BigInteger x_copy(x), buBase(base);
     Index digitNum = 0;
 
-    while (!x_copy.isZero()) {
-        // Get last digit.  This is like `lastDigit = x2 % buBase, x2 /= buBase'.
+    while (!x_copy.isZero())
+    {
         BigInteger lastDigit(x_copy);
         lastDigit.divide(buBase, x_copy);
-        // Save the digit.
         block[digitNum] = lastDigit.toUnsignedShort();
-        // Move on.  We can't run out of room: we figured it out above.
         digitNum++;
     }
 
     // Save the actual length.
-    len = digitNum;
+    mLength = digitNum;
 }
 
 BigIntegerIO::operator BigInteger() const
 {
     BigInteger ans, buBase(base), temp;
-    Index digitNum = len;
+    Index digitNum = mLength;
     while (digitNum > 0)
     {
         digitNum--;
@@ -93,23 +89,20 @@ BigIntegerIO::operator BigInteger() const
 
 BigIntegerIO::BigIntegerIO(const std::string &s, Base base)
 {
-    // Check the base.
     if (base < 2 || base > 10)
     {
         cout << "[ERROR] Invalid Base(3): " << base << endl;
         return;
     }
-
-    // Save the base.
     this->base = base;
 
-    len = Index(s.length());
-    allocate(len);
+    mLength = Index(s.length());
+    allocate(mLength);
 
     Index digitNum, symbolNumInString;
-    for (digitNum = 0; digitNum < len; digitNum++)
+    for (digitNum = 0; digitNum < mLength; digitNum++)
     {
-        symbolNumInString = len - 1 - digitNum;
+        symbolNumInString = mLength - 1 - digitNum;
         char theSymbol = s[symbolNumInString];
         if (theSymbol >= '0' && theSymbol <= '9')
         {
@@ -132,25 +125,26 @@ BigIntegerIO::BigIntegerIO(const std::string &s, Base base)
 
 BigIntegerIO::operator std::string() const
 {
-    if (base > 10)
+    if (base <2 || base > 10)
     {
-        cout << "[ERROR] The default string conversion not supported for base (>10): " << base << endl;
+        cout << "[ERROR] The default string conversion not supported for the base: " << base << endl;
         return std::string("Invalid Base");
     }
-    if (len == 0)
+    if (mLength == 0)
     {
         return std::string("0");
     }
-    // Some compilers don't have push_back, so use a char * buffer instead.
-    char *s = new char[len + 1];
-    s[len] = '\0';
+
+    char *s = new char[mLength + 1];
+    s[mLength] = '\0';
     Index digitNum, symbolNumInString;
-    for (symbolNumInString = 0; symbolNumInString < len; symbolNumInString++)
+    for (symbolNumInString = 0; symbolNumInString < mLength; symbolNumInString++)
     {
-        digitNum = len - 1 - symbolNumInString;
+        digitNum = mLength - 1 - symbolNumInString;
         Digit theDigit = block[digitNum];
         s[symbolNumInString] = char('0' + theDigit);
     }
+
     std::string s_copy(s);
     delete [] s;
     return s_copy;

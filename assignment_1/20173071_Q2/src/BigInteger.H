@@ -15,11 +15,11 @@ class BigInteger : public NumberBlockArray<unsigned long>
 {
   public:
     // Enumeration for the result of a comparison.
-    enum CmpRes
+    enum CompareResult
     {
-        less = -1,
-        equal = 0,
-        greater = 1
+        LESS    = 1,
+        EQUAL   = 2,
+        GREATER = 3,
     };
 
     // BigIntegers are built with a Block type of unsigned long.
@@ -27,24 +27,21 @@ class BigInteger : public NumberBlockArray<unsigned long>
     typedef NumberBlockArray<Block>::Index Index;
 
   protected:
-      // Creates a BigInteger with a capacity; for internal use.
+      // For internal use.
       BigInteger(int, Index c) : NumberBlockArray<Block>(0, c) {}
-      // Decreases len to eliminate any leading zero blocks.
+      // Eliminate any leading zero blocks.
       void trimLeadingZeros();
 
   public:
 
-    // Constructs zero.
     BigInteger() : NumberBlockArray<Block>() {}
     // Copy constructor
     BigInteger(const BigInteger &x) : NumberBlockArray<Block>(x) {}
     // Assignment operator
     void operator=(const BigInteger &x) { NumberBlockArray<Block>::operator =(x); }
-
     // Copy Constructor - that copies from a given array of blocks.
     BigInteger(const Block *b, Index blen) : NumberBlockArray<Block>(b, blen)
     {
-        // Eliminate any leading zeros we may have been passed.
         trimLeadingZeros();
     }
 
@@ -64,26 +61,29 @@ class BigInteger : public NumberBlockArray<unsigned long>
     // Converters to primitive integer types
     unsigned short toUnsignedShort() const { return convertToPrimitive <unsigned short>(); }
 
-    // The number is zero if and only if the canonical length is zero.
     bool isZero() const;
 
     // Overloaded operators
     // Helper function -> Compares *this to x
-    CmpRes compareTo(const BigInteger &x) const;
+    CompareResult compareTo(const BigInteger &x) const;
     // Ordinary comparison operators
     bool operator ==(const BigInteger &x) const { return NumberBlockArray<Block>::operator ==(x); }
     bool operator !=(const BigInteger &x) const { return NumberBlockArray<Block>::operator !=(x); }
-    bool operator < (const BigInteger &x) const { return compareTo(x) == less; }
-    bool operator <=(const BigInteger &x) const { return compareTo(x) != greater; }
-    bool operator >=(const BigInteger &x) const { return compareTo(x) != less; }
-    bool operator > (const BigInteger &x) const { return compareTo(x) == greater; }
+    bool operator < (const BigInteger &x) const { return compareTo(x) == BigInteger::LESS; }
+    bool operator <=(const BigInteger &x) const { return compareTo(x) != BigInteger::GREATER; }
+    bool operator >=(const BigInteger &x) const { return compareTo(x) != BigInteger::LESS; }
+    bool operator > (const BigInteger &x) const { return compareTo(x) == BigInteger::GREATER; }
 
-    // Arguments are read-only operands, result is saved in *this.
+    // Arguments are read-only operands
+    // Result of the operation is saved in *this.
     void add(const BigInteger &a, const BigInteger &b);
     void subtract(const BigInteger &a, const BigInteger &b);
     void multiply(const BigInteger &a, const BigInteger &b);
     void bitShiftLeft(const BigInteger &a, int b);
     void bitShiftRight(const BigInteger &a, int b);
+    // After division
+    // 'q' has the qoutient
+    // *this has the remainder
     void divide(const BigInteger &b, BigInteger &q);
 
     // Overloaded Arithmetic Operators
@@ -157,42 +157,34 @@ inline BigInteger BigInteger::operator >>(int b) const
     return ans;
 }
 
-// CONSTRUCTION FROM PRIMITIVE INTEGERS
 template <class X>
 void BigInteger::initFromPrimitive(X x)
 {
-    // NumberBlockArray already initialized us to zero.
     if (x != 0)
     {
         // Create a single block.
-        cap = 1;
+        mCapacity = 1;
         block = new Block[1];
-        len = 1;
+        mLength = 1;
         block[0] = Block(x);
     }
 }
 
-// CONVERSION TO PRIMITIVE INTEGERS
 template <class X>
 X BigInteger::convertToPrimitive() const
 {
     X x;
-    if (len == 0)
+    if (mLength == 0)
     {
-        // The number is zero; return zero.
         return 0;
     }
-    else if (len == 1)
+    else if (mLength == 1)
     {
-        // The single block might fit in an X.  Try the conversion.
         x = X(block[0]);
-        // Make sure the result accurately represents the block.
         if (Block(x) == block[0])
         {
-            // Successful conversion.
-            return x;
+            return x; // conversion successful.
         }
-        // Otherwise fall through.
     }
     cout << "[ERROR] Value is too big to fit in the requested type" << endl;
     return x;

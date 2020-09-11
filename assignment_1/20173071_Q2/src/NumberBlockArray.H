@@ -1,7 +1,6 @@
 #ifndef NUMBERBLOCKARRAY_H
 #define NUMBERBLOCKARRAY_H
 
-// Make sure we have NULL.
 #ifndef NULL
 #define NULL 0
 #endif
@@ -18,10 +17,10 @@ class NumberBlockArray
     // The number of bits in a block, defined below.
     static const unsigned int N;
     // The current allocated capacity of this NumberBlockArray (in blocks)
-    Index cap;
+    Index mCapacity;
     // The actual length of the value stored in this NumberBlockArray (in blocks)
-    Index len;
-    // Heap-allocated array of the blocks (can be NULL if len == 0)
+    Index mLength;
+    // Heap-allocated array of the blocks
     Block *block;
 
     // Constructs a 'zero' NumberBlockArray with the given capacity.
@@ -42,10 +41,10 @@ class NumberBlockArray
     NumberBlockArray(const Block *b, Index blen);
 
     // exposing the member data
-    Index getCapacity()     const { return cap; }
-    Index getLength()       const { return cap; }
+    Index getCapacity()     const { return mCapacity; }
+    Index getLength()       const { return mCapacity; }
     Block getBlock(Index i) const { return block[i];   }
-    bool  isEmpty()         const { return len == 0; }
+    bool  isEmpty()         const { return mLength == 0; }
 
     // Assignment operator
     void operator=(const NumberBlockArray<Block> &x);
@@ -58,16 +57,16 @@ const unsigned int NumberBlockArray<Block>::N = 8 * sizeof(Block);
 
 template <class Block>
 NumberBlockArray<Block>::NumberBlockArray(Index c)
-:cap(c),
-len(0)
+:mCapacity(c),
+mLength(0)
 {
-    block = (cap > 0) ? (new Block[cap]) : NULL;
+    block = (mCapacity > 0) ? (new Block[mCapacity]) : NULL;
 }
 
 template <class Block>
 NumberBlockArray<Block>::NumberBlockArray()
-:cap(0),
-len(0)
+:mCapacity(0),
+mLength(0)
 {
     block = NULL;
 }
@@ -76,13 +75,13 @@ template <class Block>
 void NumberBlockArray<Block>::allocate(Index c)
 {
     // If the requested capacity is more than the current capacity...
-    if (c > cap)
+    if (c > mCapacity)
     {
         // Delete the old number array
         delete [] block;
         // Allocate the new array
-        cap = c;
-        block = new Block[cap];
+        mCapacity = c;
+        block = new Block[mCapacity];
     }
 }
 
@@ -90,15 +89,15 @@ template <class Block>
 void NumberBlockArray<Block>::allocateAndCopy(Index c)
 {
     // If the requested capacity is more than the current capacity...
-    if (c > cap)
+    if (c > mCapacity)
     {
         Block *oldBlock = block;
         // Allocate the new number array
-        cap = c;
-        block = new Block[cap];
+        mCapacity = c;
+        block = new Block[mCapacity];
         // Copy number blocks
         Index i;
-        for (i = 0; i < len; i++)
+        for (i = 0; i < mLength; i++)
         {
             block[i] = oldBlock[i];
         }
@@ -109,14 +108,14 @@ void NumberBlockArray<Block>::allocateAndCopy(Index c)
 
 template <class Block>
 NumberBlockArray<Block>::NumberBlockArray(const NumberBlockArray<Block> &x)
-:len(x.len)
+:mLength(x.mLength)
 {
     // Create array
-    cap = len;
-    block = new Block[cap];
+    mCapacity = mLength;
+    block = new Block[mCapacity];
     // Copy blocks
     Index i;
-    for (i = 0; i < len; i++)
+    for (i = 0; i < mLength; i++)
     {
         block[i] = x.block[i];
     }
@@ -124,14 +123,14 @@ NumberBlockArray<Block>::NumberBlockArray(const NumberBlockArray<Block> &x)
 
 template <class Block>
 NumberBlockArray<Block>::NumberBlockArray(const Block *b, Index blen)
-:cap(blen)
-,len(blen)
+:mCapacity(blen)
+,mLength(blen)
 {
     // Create array
-    block = new Block[cap];
+    block = new Block[mCapacity];
     // Copy blocks
     Index i;
-    for (i = 0; i < len; i++)
+    for (i = 0; i < mLength; i++)
     {
         block[i] = b[i];
     }
@@ -147,12 +146,12 @@ void NumberBlockArray<Block>::operator=(const NumberBlockArray<Block> &x)
     }
 
     // Copy length & Expand array if necessary
-    len = x.len;
-    allocate(len);
+    mLength = x.mLength;
+    allocate(mLength);
 
     // Copy number blocks
     Index i;
-    for (i = 0; i < len; i++)
+    for (i = 0; i < mLength; i++)
     {
         block[i] = x.block[i];
     }
@@ -161,7 +160,7 @@ void NumberBlockArray<Block>::operator=(const NumberBlockArray<Block> &x)
 template <class Block>
 bool NumberBlockArray<Block>::operator ==(const NumberBlockArray<Block> &x) const
 {
-    if (len != x.len)
+    if (mLength != x.mLength)
     {
         // Definitely unequal.
         return false;
@@ -170,7 +169,7 @@ bool NumberBlockArray<Block>::operator ==(const NumberBlockArray<Block> &x) cons
     {
         // Compare corresponding blocks one by one.
         Index i;
-        for (i = 0; i < len; i++)
+        for (i = 0; i < mLength; i++)
         {
             if (block[i] != x.block[i])
             {

@@ -1,6 +1,4 @@
-// Sample program demonstrating the use of the Big Integer Library.
 
-// Standard libraries
 #include <string>
 #include <iostream>
 #include "BigIntegerIO.H"

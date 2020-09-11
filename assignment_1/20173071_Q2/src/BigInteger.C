@@ -5,9 +5,9 @@ using namespace std;
 
 void BigInteger::trimLeadingZeros()
 {
-    while (len > 0 && block[len - 1] == 0)
+    while (mLength > 0 && block[mLength - 1] == 0)
     {
-        len--;
+        mLength--;
     }
 }
 
@@ -16,22 +16,22 @@ bool BigInteger::isZero() const
     return NumberBlockArray::isEmpty();
 }
 
-// COMPARISON
-BigInteger::CmpRes BigInteger::compareTo(const BigInteger &x) const
+BigInteger::CompareResult BigInteger::compareTo(const BigInteger &x) const
 {
+    BigInteger::CompareResult sResult = BigInteger::EQUAL;
     // A bigger length implies a bigger number.
-    if (len < x.len)
+    if (mLength < x.mLength)
     {
-        return less;
+        sResult = BigInteger::LESS;
     }
-    else if (len > x.len)
+    else if (mLength > x.mLength)
     {
-        return greater;
+        sResult = BigInteger::GREATER;
     }
     else
     {
         // Compare blocks one by one from left to right.
-        Index i = len;
+        Index i = mLength;
         while (i > 0)
         {
             i--;
@@ -41,25 +41,27 @@ BigInteger::CmpRes BigInteger::compareTo(const BigInteger &x) const
             }
             else if (block[i] > x.block[i])
             {
-                return greater;
+                sResult = BigInteger::GREATER;
             }
             else
             {
-                return less;
+                sResult = BigInteger::LESS;
             }
         }
         // If no blocks differed, the numbers are equal.
-        return equal;
+        sResult = BigInteger::EQUAL;
     }
+    return sResult;
 }
 
-// A repeated check to be performed by all the arithmentic operations
-#define IF_ALIASED(cond, op) \
-    if (cond) \
+// A macro defined to use for the repeated checks that needs to be performed
+// by all the arithmentic operations
+#define IF_ALIASED(condition, operation) \
+    if (condition) \
     { \
-        BigInteger tmpThis; \
-        tmpThis.op; \
-        *this = tmpThis; \
+        BigInteger tmp; \
+        tmp.operation; \
+        *this = tmp; \
         return; \
     }
 
@@ -67,19 +69,18 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
 {
     IF_ALIASED(this == &a || this == &b, add(a, b));
 
-    // If one argument is zero, copy the other.
-    if (a.len == 0)
+    if (a.mLength == 0)
     {
         operator =(b);
         return;
     }
-    else if (b.len == 0)
+    else if (b.mLength == 0)
     {
         operator =(a);
         return;
     }
 
-    // Carries in and out of an addition stage
+    // Carries IN and OUT
     bool carryIn, carryOut;
     Block temp;
     Index i;
@@ -87,7 +88,7 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
     // bigInput points to the longer input
     // smallInput points to the shorter Input
     const BigInteger *bigInput, *smallInput;
-    if (a.len >= b.len)
+    if (a.mLength >= b.mLength)
     {
         bigInput = &a;
         smallInput = &b;
@@ -99,11 +100,11 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
     }
 
     // Set prelimiary length and make room in this BigInteger
-    len = bigInput->len + 1;
-    allocate(len);
+    mLength = bigInput->mLength + 1;
+    allocate(mLength);
 
     // For each block index that is present in both inputs...
-    for (i = 0, carryIn = false; i < smallInput->len; i++)
+    for (i = 0, carryIn = false; i < smallInput->mLength; i++)
     {
         // Add input blocks
         temp = bigInput->block[i] + smallInput->block[i];
@@ -123,7 +124,7 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
 
     // If there is a carry left over, increase blocks until
     // one does not roll over.
-    for (; i < bigInput->len && carryIn; i++)
+    for (; i < bigInput->mLength && carryIn; i++)
     {
         temp = bigInput->block[i] + 1;
         carryIn = (temp == 0);
@@ -132,7 +133,7 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
 
     // If the carry was resolved but the larger number
     // still has blocks, copy them over.
-    for (; i < bigInput->len; i++)
+    for (; i < bigInput->mLength; i++)
     {
         block[i] = bigInput->block[i];
     }
@@ -144,7 +145,7 @@ void BigInteger::add(const BigInteger &a, const BigInteger &b)
     }
     else
     {
-        len--;
+        mLength--;
     }
 }
 
@@ -153,13 +154,13 @@ void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
 {
     IF_ALIASED(this == &a || this == &b, subtract(a, b));
 
-    if (b.len == 0)
+    if (b.mLength == 0)
     {
         // If b is zero, copy a.
         operator =(a);
         return;
     }
-    else if (a.len < b.len)
+    else if (a.mLength < b.mLength)
     {
         // If a is shorter than b, the result is negative.
         cout << "ERROR: Negative result in unsigned calculation" << endl;
@@ -171,11 +172,11 @@ void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
     Index i;
 
     // Set preliminary length and make room
-    len = a.len;
-    allocate(len);
+    mLength = a.mLength;
+    allocate(mLength);
 
     // For each block index that is present in both inputs...
-    for (i = 0, borrowIn = false; i < b.len; i++)
+    for (i = 0, borrowIn = false; i < b.mLength; i++)
     {
         temp = a.block[i] - b.block[i];
 
@@ -194,7 +195,7 @@ void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
 
     // If there is a borrow left over, decrease blocks until
     // one does not reverse rollover.
-    for (; i < a.len && borrowIn; i++)
+    for (; i < a.mLength && borrowIn; i++)
     {
         borrowIn = (a.block[i] == 0);
         block[i] = a.block[i] - 1;
@@ -203,13 +204,13 @@ void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
     // print error, but zero out this object.
     if (borrowIn)
     {
-        len = 0;
+        mLength = 0;
         cout << "ERROR: Negative result in unsigned calculation" << endl;
     }
     else
     {
         // Copy over the rest of the blocks
-        for (; i < a.len; i++)
+        for (; i < a.mLength; i++)
         {
             block[i] = a.block[i];
         }
@@ -229,14 +230,14 @@ void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
 // A helper function used by both the multiplication and the division routines.
 // getShiftedBlock() returns the 'x'th block of 'num << y'.
 // 'y' may be anything from 0 to N - 1, and 'x' may be anything from
-// 0 to 'num.len'.
+// 0 to 'num.mLength'.
 
 inline BigInteger::Block getShiftedBlock(const BigInteger &num,
                                           BigInteger::Index x,
                                           unsigned int y)
 {
     BigInteger::Block part1 = (x == 0 || y == 0) ? 0 : (num.block[x - 1] >> (BigInteger::N - y));
-    BigInteger::Block part2 = (x == num.len) ? 0 : (num.block[x] << y);
+    BigInteger::Block part2 = (x == num.mLength) ? 0 : (num.block[x] << y);
     return part1 | part2;
 }
 
@@ -245,9 +246,9 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
     IF_ALIASED(this == &a || this == &b, multiply(a, b));
 
     // If either a or b is zero, set to zero.
-    if (a.len == 0 || b.len == 0)
+    if (a.mLength == 0 || b.mLength == 0)
     {
-        len = 0;
+        mLength = 0;
         return;
     }
 
@@ -258,17 +259,17 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
     bool carryIn, carryOut;
 
     // Set preliminary length and make room
-    len = a.len + b.len;
-    allocate(len);
+    mLength = a.mLength + b.mLength;
+    allocate(mLength);
 
     // Zero out this object
-    for (i = 0; i < len; i++)
+    for (i = 0; i < mLength; i++)
     {
         block[i] = 0;
     }
 
     // For each block of the first number...
-    for (i = 0; i < a.len; i++)
+    for (i = 0; i < a.mLength; i++)
     {
         // For each 1-bit of that block...
         for (i2 = 0; i2 < N; i2++)
@@ -278,7 +279,7 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
                 continue;
             }
 
-            for (j = 0, k = i, carryIn = false; j <= b.len; j++, k++)
+            for (j = 0, k = i, carryIn = false; j <= b.mLength; j++, k++)
             {
                 temp = block[k] + getShiftedBlock(b, j, i2);
                 carryOut = (temp < block[k]);
@@ -299,9 +300,9 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
         }
     }
     // Trim possible leading zero
-    if (block[len - 1] == 0)
+    if (block[mLength - 1] == 0)
     {
-        len--;
+        mLength--;
     }
 }
 
@@ -325,49 +326,49 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
         return;
     }
 
-    if (b.len == 0)
+    if (b.mLength == 0)
     {
-        q.len = 0;
+        q.mLength = 0;
         return;
     }
 
-    if (len < b.len)
+    if (mLength < b.mLength)
     {
-        q.len = 0;
+        q.mLength = 0;
         return;
     }
 
-    // At this point we know this->len >= b.len > 0
+    // At this point we know this->mLength >= b.mLength > 0
 
     // Variables for the calculation
     Index i, j, k;
     unsigned int i2;
     Block temp;
     bool borrowIn, borrowOut;
-    Index origLen = len; // Save real length.
+    Index origLen = mLength; // Save real length.
 
     //To avoid an out-of-bounds access in case of reallocation, allocate
     //first and then increment the logical length.
-    allocateAndCopy(len + 1);
+    allocateAndCopy(mLength + 1);
 
-    len++;
+    mLength++;
     block[origLen] = 0; // Zero the added block.
 
     // subtractBuf holds part of the result of a subtraction; see above.
-    Block *subtractBuf = new Block[len];
+    Block *subtractBuf = new Block[mLength];
 
     // Set preliminary length for quotient and make room
-    q.len = origLen - b.len + 1;
-    q.allocate(q.len);
+    q.mLength = origLen - b.mLength + 1;
+    q.allocate(q.mLength);
 
     // Zero out the quotient
-    for (i = 0; i < q.len; i++)
+    for (i = 0; i < q.mLength; i++)
     {
         q.block[i] = 0;
     }
 
     // For each possible left-shift of b in blocks...
-    i = q.len;
+    i = q.mLength;
     while (i > 0)
     {
         i--;
@@ -378,7 +379,7 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
         while (i2 > 0)
         {
             i2--;
-            for (j = 0, k = i, borrowIn = false; j <= b.len; j++, k++)
+            for (j = 0, k = i, borrowIn = false; j <= b.mLength; j++, k++)
             {
                 temp = block[k] - getShiftedBlock(b, j, i2);
                 borrowOut = (temp > block[k]);
@@ -409,9 +410,9 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
     }
 
     // Trim possible leading zero in quotient
-    if (q.block[q.len - 1] == 0)
+    if (q.block[q.mLength - 1] == 0)
     {
-        q.len--;
+        q.mLength--;
     }
     // Trim any/all leading zeros in remainder
     trimLeadingZeros();
@@ -429,8 +430,8 @@ void BigInteger::bitShiftLeft(const BigInteger &a, int b)
     unsigned int shiftBits = b % N;
 
     // make room for high bits nudged left into another block
-    len = a.len + shiftBlocks + 1;
-    allocate(len);
+    mLength = a.mLength + shiftBlocks + 1;
+    allocate(mLength);
 
     Index i, j;
     for (i = 0; i < shiftBlocks; i++)
@@ -438,18 +439,17 @@ void BigInteger::bitShiftLeft(const BigInteger &a, int b)
         block[i] = 0;
     }
 
-    for (j = 0, i = shiftBlocks; j <= a.len; j++, i++)
+    for (j = 0, i = shiftBlocks; j <= a.mLength; j++, i++)
     {
         block[i] = getShiftedBlock(a, j, shiftBits);
     }
 
     // Trim possible leading zero
-    if (block[len - 1] == 0)
+    if (block[mLength - 1] == 0)
     {
-        len--;
+        mLength--;
     }
 }
-
 
 void BigInteger::bitShiftRight(const BigInteger &a, int b)
 {
@@ -460,27 +460,27 @@ void BigInteger::bitShiftRight(const BigInteger &a, int b)
 
     // Now (N * rightShiftBlocks - leftShiftBits) == b
     // and 0 <= leftShiftBits < N.
-    if (rightShiftBlocks >= a.len + 1)
+    if (rightShiftBlocks >= a.mLength + 1)
     {
         // All of a is guaranteed to be shifted off, even considering the left bit shift
-        len = 0;
+        mLength = 0;
         return;
     }
 
     // Now we're allocating a positive amount.
     // make room for high bits nudged left into another block
-    len = a.len + 1 - rightShiftBlocks;
-    allocate(len);
+    mLength = a.mLength + 1 - rightShiftBlocks;
+    allocate(mLength);
 
     Index i, j;
-    for (j = rightShiftBlocks, i = 0; j <= a.len; j++, i++)
+    for (j = rightShiftBlocks, i = 0; j <= a.mLength; j++, i++)
     {
         block[i] = getShiftedBlock(a, j, leftShiftBits);
     }
 
     // Trim possible leading zero
-    if (block[len - 1] == 0)
+    if (block[mLength - 1] == 0)
     {
-        len--;
+        mLength--;
     }
 }
