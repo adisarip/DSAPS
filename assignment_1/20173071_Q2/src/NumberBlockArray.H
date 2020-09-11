@@ -31,14 +31,14 @@ class NumberBlockArray
     ~NumberBlockArray() { delete [] block; }
     // Ensures that the array has at least the requested capacity.
     // may destroy the contents.
-    void allocate(Index c);
+    void allocate(Index capacity);
     // Ensures that the array has at least the requested capacity.
     // does not destroy the contents.
-    void allocateAndCopy(Index c);
+    void allocateAndCopy(Index capacity);
     // Copy constructor
     NumberBlockArray(const NumberBlockArray<Block> &x);
     // Constructor that copies from a given array of blocks
-    NumberBlockArray(const Block *b, Index blen);
+    NumberBlockArray(const Block *b, Index blockLength);
 
     // exposing the member data
     Index getCapacity()     const { return mCapacity; }
@@ -56,8 +56,8 @@ template <class Block>
 const unsigned int NumberBlockArray<Block>::N = 8 * sizeof(Block);
 
 template <class Block>
-NumberBlockArray<Block>::NumberBlockArray(Index c)
-:mCapacity(c),
+NumberBlockArray<Block>::NumberBlockArray(Index capacity)
+:mCapacity(capacity),
 mLength(0)
 {
     block = (mCapacity > 0) ? (new Block[mCapacity]) : NULL;
@@ -72,28 +72,28 @@ mLength(0)
 }
 
 template <class Block>
-void NumberBlockArray<Block>::allocate(Index c)
+void NumberBlockArray<Block>::allocate(Index capacity)
 {
     // If the requested capacity is more than the current capacity...
-    if (c > mCapacity)
+    if (capacity > mCapacity)
     {
         // Delete the old number array
         delete [] block;
         // Allocate the new array
-        mCapacity = c;
+        mCapacity = capacity;
         block = new Block[mCapacity];
     }
 }
 
 template <class Block>
-void NumberBlockArray<Block>::allocateAndCopy(Index c)
+void NumberBlockArray<Block>::allocateAndCopy(Index capacity)
 {
     // If the requested capacity is more than the current capacity...
-    if (c > mCapacity)
+    if (capacity > mCapacity)
     {
         Block *oldBlock = block;
         // Allocate the new number array
-        mCapacity = c;
+        mCapacity = capacity;
         block = new Block[mCapacity];
         // Copy number blocks
         Index i;
@@ -122,9 +122,9 @@ NumberBlockArray<Block>::NumberBlockArray(const NumberBlockArray<Block> &x)
 }
 
 template <class Block>
-NumberBlockArray<Block>::NumberBlockArray(const Block *b, Index blen)
-:mCapacity(blen)
-,mLength(blen)
+NumberBlockArray<Block>::NumberBlockArray(const Block *b, Index blockLength)
+:mCapacity(blockLength)
+,mLength(blockLength)
 {
     // Create array
     block = new Block[mCapacity];

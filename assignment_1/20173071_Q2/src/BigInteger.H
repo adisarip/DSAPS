@@ -40,7 +40,7 @@ class BigInteger : public NumberBlockArray<unsigned long>
     // Assignment operator
     void operator=(const BigInteger &x) { NumberBlockArray<Block>::operator =(x); }
     // Copy Constructor - that copies from a given array of blocks.
-    BigInteger(const Block *b, Index blen) : NumberBlockArray<Block>(b, blen)
+    BigInteger(const Block *b, Index blockLength) : NumberBlockArray<Block>(b, blockLength)
     {
         trimLeadingZeros();
     }
