@@ -1026,8 +1026,8 @@ BigInteger exponentiation(BigInteger x, BigInteger y)
 
 //====================== Main Driver Program : Begin =====================//
 
+// vector is only used for the driver program
 #include <vector>
-
 int main (int argc, char* argv[])
 {
     int Q = 0;

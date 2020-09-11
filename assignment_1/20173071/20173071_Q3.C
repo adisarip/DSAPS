@@ -286,52 +286,22 @@ int Deque<T>::size()
 
 
 //============ Driver Program ==============//
-// The following represent the corresponding query number for each function:
-// 1. push_front(x)
-// 2. pop_front()
-// 3. push_back(x)
-// 4. pop_back()
-// 5. deque()
-// 6. deque(n,x)
-// 7. front()
-// 8. back()
-// 9. empty()
-// 10. size()
-// 11. resize(x, d)
-// 12. clear()
-// 13. D[n]
-// 14. display() - display contents of deque
-// Your task is to take Q queries as input and perform the corresponding
-// function and display the output.
 
-// Input format:
-// =============
-// First Line contains the query count Q
-// Next Q lines contain the query no and input( if any)
+// The vector and sstream are only used for the driver program
+#include <sstream>
+#include <vector>
 
-// Output format:
-// ==============
-// Q-1 lines displaying queue after each query
-// NOTE: for correct execution, the first query will be always deque() or deque(n,x)
-// Output for first query is not required as deque() will be empty
-
-// Sample Input:
-// =============
-// 6
-// 5
-// 1 2
-// 1 3
-// 3 4
-// 7
-// 10
-
-// Sample Output:
-// ==============
-// 2
-// 3 2
-// 3 2 4
-// 3
-// 3
+vector<int> split(const string& s, char delimiter)
+{
+   vector<int> tokens;
+   string token;
+   istringstream tokenStream(s);
+   while (getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(stoi(token));
+   }
+   return tokens;
+}
 
 int main (int argc, char* argv[])
 {
@@ -340,8 +310,11 @@ int main (int argc, char* argv[])
     int x = 0; int n = 0;
     Deque<int> deque;
 
-    cin >> Q; // read number of queries
-    cin >> cmd; // first query to create the Deque
+    string s;
+    getline(cin, s);
+    Q = stoi(s);
+    getline(cin, s);
+    cmd = stoi(s);
     if (cmd == 5)
     {
         // created already
@@ -357,15 +330,22 @@ int main (int argc, char* argv[])
         return 0;
     }
 
-    for (int i=0; i<Q-1; i++)
+    vector<string> iQueries;
+    for (int i=2; i<=Q; i++)
     {
-        cin >> cmd;
+        getline(cin, s);
+        iQueries.push_back(s);
+    }
+
+    for (string s : iQueries)
+    {
+        vector<int> tokens = split(s, ' ');
+        cmd = tokens.at(0);
         switch (cmd)
         {
             case 1:
                 // push_front(x)
-                cin >> x;
-                deque.push_front(x);
+                deque.push_front(tokens.at(1));
                 deque.print();
                 break;
             case 2:
@@ -375,8 +355,7 @@ int main (int argc, char* argv[])
                 break;
             case 3:
                 // push_back(x)
-                cin >> x;
-                deque.push_back(x);
+                deque.push_back(tokens.at(1));
                 deque.print();
                 break;
             case 4:
@@ -402,8 +381,7 @@ int main (int argc, char* argv[])
                 break;
             case 11:
                 // resize(size,d)
-                cin >> n >> x;
-                deque.resize(n,x);
+                deque.resize(tokens.at(1), tokens.at(2));
                 deque.print();
                 break;
             case 12:
@@ -413,8 +391,7 @@ int main (int argc, char* argv[])
                 break;
             case 13:
                 // D[n]
-                cin >> n;
-                cout << deque[n] << endl;
+                cout << deque[tokens.at(1)] << endl;
                 break;
             case 14:
                 // display()
