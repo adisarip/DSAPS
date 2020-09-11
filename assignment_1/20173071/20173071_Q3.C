@@ -307,31 +307,13 @@ int main (int argc, char* argv[])
 {
     int Q = 0;
     int cmd = 0;
-    int x = 0; int n = 0;
     Deque<int> deque;
 
     string s;
     getline(cin, s);
     Q = stoi(s);
-    getline(cin, s);
-    cmd = stoi(s);
-    if (cmd == 5)
-    {
-        // created already
-    }
-    else if (cmd == 6)
-    {
-        cin >> n >> x;
-        deque.resize(n,x);
-    }
-    else
-    {
-        // Invalid Command - create the deque first.
-        return 0;
-    }
-
     vector<string> iQueries;
-    for (int i=2; i<=Q; i++)
+    for (int i=1; i<=Q; i++)
     {
         getline(cin, s);
         iQueries.push_back(s);
@@ -362,6 +344,12 @@ int main (int argc, char* argv[])
                 // pop_back(x)
                 deque.pop_back();
                 deque.print();
+                break;
+            case 5:
+                break; // already created
+            case 6:
+                // As the default deque is already created - resize if cmd == 6
+                deque.resize(tokens.at(1), tokens.at(2));
                 break;
             case 7:
                 // front()
