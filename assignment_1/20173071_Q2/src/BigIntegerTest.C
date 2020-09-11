@@ -3,98 +3,27 @@
 // Standard libraries
 #include <string>
 #include <iostream>
+#include "BigIntegerIO.H"
 #include "BigIntegerUtils.H"
 using namespace std;
 
 int main()
 {
-    /* The library throws `const char *' error messages when things go
-     * wrong.  It's a good idea to catch them using a `try' block like this
-     * one.  Your C++ compiler might need a command-line option to compile
-     * code that uses exceptions. */
-    BigUnsigned a; // a is 0
-    unsigned long b = 535;
+    string s1("566752498028882558417594189386420690117559384448751654157905634076863498722302201920657508787134402865072743650474134194097117309412827177212973157160061849638167150488562953654589151552451332056806089115372808474969974012036551062752");
+    string s2("1447448402632996266959601092923195406769183583922939321424508923901952455864859674545580638544673875329913712841042280444718252896521776423019972072599040280237459554744353957594494429331983696");
 
-    /* Any primitive integer can be converted implicitly to a
-     * BigInteger. */
-    a = b;
+    BigInteger b1 = stringToBigInteger(s1);
+    BigInteger b2 = stringToBigInteger(s2);
 
-    BigUnsigned c(a); // Copy a BigInteger.
+    cout << "\nNumber b1: " << b1 << endl;
+    cout << "\nNumber b2: " << b2 << endl;
+    cout << "\nGCD(b1,b2): " << gcd(b1,b2) << endl;
+    cout << endl;
 
-    // The int literal is converted to a BigInteger.
-    unsigned long _d = 314159265;
-    BigUnsigned d(_d);
-
-    // Instead you can convert the number from a string.
-    string s("314159265358979323846264338327964286823462424629462946284623894623946923846923");
-    BigUnsigned b1 = stringToBigUnsigned(s);
-
-    // f is implicitly stringified and sent to cout.
-    cout << b1 * b1 * b1 * b1 << endl;
-
-    /* Let's do some math!  The library overloads most of the
-     * mathematical operators (including assignment operators) to
-     * work on BigIntegers.  There are also ``copy-less''
-     * operations; see `BigUnsigned.hh' for details. */
-
-    // Arithmetic operators
-    unsigned long _g = 314159;
-    unsigned long _h = 265;
-    BigUnsigned g(_g), h(_h);
-    cout << (g + h) << '\n'
-              << (g - h) << '\n'
-              << (g * h) << '\n'
-              << (g / h) << '\n'
-              << (g % h) << endl;
-
-    // Let's do some heavy lifting and calculate powers of 314.
-    int maxPower = 10;
-    unsigned long _result = 1;
-    unsigned long _big314 = 314;
-    BigUnsigned result(_result), big314(_big314);
-    for (int power = 0; power <= maxPower; power++)
-    {
-        cout << "314^" << power << " = " << result << endl;
-        result = result * big314; // A BigInteger assignment operator
-    }
-
-    // Some big-integer algorithms (albeit on small integers).
-    //cout << gcd(BigUnsigned(60), 72) << '\n'
-    //    << modinv(BigUnsigned(7), 11) << '\n'
-    //    << modexp(BigUnsigned(314), 159, 2653) << endl;
-
-    // Add your own code here to experiment with the library.
+    unsigned long f = 1000;
+    BigInteger b3(f);
+    cout << "factorial(" << f << "): " << factorial(f) << endl;
+    cout << endl;
 
     return 0;
 }
-
-/*
-The original sample program produces this output:
-
-3141592653589793238462643383279
-314424
-313894
-83252135
-1185
-134
-0xFF
-0xFF00FFFF
-0xFF00FF00
-0x1FFFE00000
-0x3F
-314^0 = 1
-314^1 = 314
-314^2 = 98596
-314^3 = 30959144
-314^4 = 9721171216
-314^5 = 3052447761824
-314^6 = 958468597212736
-314^7 = 300959139524799104
-314^8 = 94501169810786918656
-314^9 = 29673367320587092457984
-314^10 = 9317437338664347031806976
-12
-8
-1931
-
-*/

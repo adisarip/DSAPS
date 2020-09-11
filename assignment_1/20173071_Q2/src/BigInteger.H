@@ -1,17 +1,17 @@
-#ifndef BIGUNSIGNED_H
-#define BIGUNSIGNED_H
+#ifndef BigInteger_H
+#define BigInteger_H
 
 #include "NumberBlockArray.H"
 #include <iostream>
 using namespace std;
 
-// BigUnsigned class represents a nonnegative integer of size limited only by
-// available memory. BigUnsigneds support most mathematical operators and can
+// BigInteger class represents a nonnegative integer of size limited only by
+// available memory. BigIntegers support most mathematical operators and can
 // be converted to and from most primitive integer types.
 // The number is stored as a NumberBlockArray of unsigned longs as if it were
 // written in base 256^sizeof(unsigned long). The least significant block is
 // first, and the length is such that the most significant block is nonzero.
-class BigUnsigned : public NumberBlockArray<unsigned long>
+class BigInteger : public NumberBlockArray<unsigned long>
 {
   public:
     // Enumeration for the result of a comparison.
@@ -22,27 +22,27 @@ class BigUnsigned : public NumberBlockArray<unsigned long>
         greater = 1
     };
 
-    // BigUnsigneds are built with a Block type of unsigned long.
+    // BigIntegers are built with a Block type of unsigned long.
     typedef unsigned long Block;
     typedef NumberBlockArray<Block>::Index Index;
 
   protected:
-      // Creates a BigUnsigned with a capacity; for internal use.
-      BigUnsigned(int, Index c) : NumberBlockArray<Block>(0, c) {}
+      // Creates a BigInteger with a capacity; for internal use.
+      BigInteger(int, Index c) : NumberBlockArray<Block>(0, c) {}
       // Decreases len to eliminate any leading zero blocks.
       void trimLeadingZeros();
 
   public:
 
     // Constructs zero.
-    BigUnsigned() : NumberBlockArray<Block>() {}
+    BigInteger() : NumberBlockArray<Block>() {}
     // Copy constructor
-    BigUnsigned(const BigUnsigned &x) : NumberBlockArray<Block>(x) {}
+    BigInteger(const BigInteger &x) : NumberBlockArray<Block>(x) {}
     // Assignment operator
-    void operator=(const BigUnsigned &x) { NumberBlockArray<Block>::operator =(x); }
+    void operator=(const BigInteger &x) { NumberBlockArray<Block>::operator =(x); }
 
     // Copy Constructor - that copies from a given array of blocks.
-    BigUnsigned(const Block *b, Index blen) : NumberBlockArray<Block>(b, blen)
+    BigInteger(const Block *b, Index blen) : NumberBlockArray<Block>(b, blen)
     {
         // Eliminate any leading zeros we may have been passed.
         trimLeadingZeros();
@@ -55,11 +55,11 @@ class BigUnsigned : public NumberBlockArray<unsigned long>
 
   public:
     // Constructors from primitive integer types
-    BigUnsigned(unsigned long  x) { initFromPrimitive (x); }
-    BigUnsigned(unsigned short x) { initFromPrimitive (x); }
+    BigInteger(unsigned long  x) { initFromPrimitive (x); }
+    BigInteger(unsigned short x) { initFromPrimitive (x); }
 
     // Destructor.
-    ~BigUnsigned() {}
+    ~BigInteger() {}
 
     // Converters to primitive integer types
     unsigned short toUnsignedShort() const { return convertToPrimitive <unsigned short>(); }
@@ -69,97 +69,97 @@ class BigUnsigned : public NumberBlockArray<unsigned long>
 
     // Overloaded operators
     // Helper function -> Compares *this to x
-    CmpRes compareTo(const BigUnsigned &x) const;
+    CmpRes compareTo(const BigInteger &x) const;
     // Ordinary comparison operators
-    bool operator ==(const BigUnsigned &x) const { return NumberBlockArray<Block>::operator ==(x); }
-    bool operator !=(const BigUnsigned &x) const { return NumberBlockArray<Block>::operator !=(x); }
-    bool operator < (const BigUnsigned &x) const { return compareTo(x) == less; }
-    bool operator <=(const BigUnsigned &x) const { return compareTo(x) != greater; }
-    bool operator >=(const BigUnsigned &x) const { return compareTo(x) != less; }
-    bool operator > (const BigUnsigned &x) const { return compareTo(x) == greater; }
+    bool operator ==(const BigInteger &x) const { return NumberBlockArray<Block>::operator ==(x); }
+    bool operator !=(const BigInteger &x) const { return NumberBlockArray<Block>::operator !=(x); }
+    bool operator < (const BigInteger &x) const { return compareTo(x) == less; }
+    bool operator <=(const BigInteger &x) const { return compareTo(x) != greater; }
+    bool operator >=(const BigInteger &x) const { return compareTo(x) != less; }
+    bool operator > (const BigInteger &x) const { return compareTo(x) == greater; }
 
     // Arguments are read-only operands, result is saved in *this.
-    void add(const BigUnsigned &a, const BigUnsigned &b);
-    void subtract(const BigUnsigned &a, const BigUnsigned &b);
-    void multiply(const BigUnsigned &a, const BigUnsigned &b);
-    void bitShiftLeft(const BigUnsigned &a, int b);
-    void bitShiftRight(const BigUnsigned &a, int b);
-    void divide(const BigUnsigned &b, BigUnsigned &q);
+    void add(const BigInteger &a, const BigInteger &b);
+    void subtract(const BigInteger &a, const BigInteger &b);
+    void multiply(const BigInteger &a, const BigInteger &b);
+    void bitShiftLeft(const BigInteger &a, int b);
+    void bitShiftRight(const BigInteger &a, int b);
+    void divide(const BigInteger &b, BigInteger &q);
 
     // Overloaded Arithmetic Operators
-    BigUnsigned operator +(const BigUnsigned &x) const;
-    BigUnsigned operator -(const BigUnsigned &x) const;
-    BigUnsigned operator *(const BigUnsigned &x) const;
-    BigUnsigned operator /(const BigUnsigned &x) const;
-    BigUnsigned operator %(const BigUnsigned &x) const;
+    BigInteger operator +(const BigInteger &x) const;
+    BigInteger operator -(const BigInteger &x) const;
+    BigInteger operator *(const BigInteger &x) const;
+    BigInteger operator /(const BigInteger &x) const;
+    BigInteger operator %(const BigInteger &x) const;
 
     // Overloaded Biwise Shift Operators
-    BigUnsigned operator <<(int b) const;
-    BigUnsigned operator >>(int b) const;
+    BigInteger operator <<(int b) const;
+    BigInteger operator >>(int b) const;
 
-    // Helper function that needs access to BigUnsigned internals
-    friend Block getShiftedBlock(const BigUnsigned &num,
+    // Helper function that needs access to BigInteger internals
+    friend Block getShiftedBlock(const BigInteger &num,
                                  Index x,
                                  unsigned int y);
 
 };
 
-inline BigUnsigned BigUnsigned::operator +(const BigUnsigned &x) const
+inline BigInteger BigInteger::operator +(const BigInteger &x) const
 {
-    BigUnsigned ans;
+    BigInteger ans;
     ans.add(*this, x);
     return ans;
 }
-inline BigUnsigned BigUnsigned::operator -(const BigUnsigned &x) const
+inline BigInteger BigInteger::operator -(const BigInteger &x) const
 {
-    BigUnsigned ans;
+    BigInteger ans;
     ans.subtract(*this, x);
     return ans;
 }
-inline BigUnsigned BigUnsigned::operator *(const BigUnsigned &x) const
+inline BigInteger BigInteger::operator *(const BigInteger &x) const
 {
-    BigUnsigned ans;
+    BigInteger ans;
     ans.multiply(*this, x);
     return ans;
 }
-inline BigUnsigned BigUnsigned::operator /(const BigUnsigned &x) const
+inline BigInteger BigInteger::operator /(const BigInteger &x) const
 {
     if (x.isZero())
     {
         cout << "[ERROR] Division by zero (/)" << endl;
     }
-    BigUnsigned q, r;
+    BigInteger q, r;
     r = *this;
     r.divide(x, q);
     return q;
 }
-inline BigUnsigned BigUnsigned::operator %(const BigUnsigned &x) const
+inline BigInteger BigInteger::operator %(const BigInteger &x) const
 {
     if (x.isZero())
     {
         cout << "[ERROR] Division by zero (%)" << endl;
     }
-    BigUnsigned q, r;
+    BigInteger q, r;
     r = *this;
     r.divide(x, q);
     return r;
 }
-inline BigUnsigned BigUnsigned::operator <<(int b) const
+inline BigInteger BigInteger::operator <<(int b) const
 {
-    BigUnsigned ans;
+    BigInteger ans;
     ans.bitShiftLeft(*this, b);
     return ans;
 }
-inline BigUnsigned BigUnsigned::operator >>(int b) const
+inline BigInteger BigInteger::operator >>(int b) const
 {
-    BigUnsigned ans;
+    BigInteger ans;
     ans.bitShiftRight(*this, b);
     return ans;
 }
 
 // CONSTRUCTION FROM PRIMITIVE INTEGERS
 template <class X>
-void BigUnsigned::initFromPrimitive(X x)
+void BigInteger::initFromPrimitive(X x)
 {
     // NumberBlockArray already initialized us to zero.
     if (x != 0)
@@ -174,7 +174,7 @@ void BigUnsigned::initFromPrimitive(X x)
 
 // CONVERSION TO PRIMITIVE INTEGERS
 template <class X>
-X BigUnsigned::convertToPrimitive() const
+X BigInteger::convertToPrimitive() const
 {
     X x;
     if (len == 0)

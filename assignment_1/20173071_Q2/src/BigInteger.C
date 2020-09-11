@@ -1,9 +1,9 @@
-#include "BigUnsigned.H"
+#include "BigInteger.H"
 #include <iostream>
 using namespace std;
 
 
-void BigUnsigned::trimLeadingZeros()
+void BigInteger::trimLeadingZeros()
 {
     while (len > 0 && block[len - 1] == 0)
     {
@@ -11,13 +11,13 @@ void BigUnsigned::trimLeadingZeros()
     }
 }
 
-bool BigUnsigned::isZero() const
+bool BigInteger::isZero() const
 {
     return NumberBlockArray::isEmpty();
 }
 
 // COMPARISON
-BigUnsigned::CmpRes BigUnsigned::compareTo(const BigUnsigned &x) const
+BigInteger::CmpRes BigInteger::compareTo(const BigInteger &x) const
 {
     // A bigger length implies a bigger number.
     if (len < x.len)
@@ -57,13 +57,13 @@ BigUnsigned::CmpRes BigUnsigned::compareTo(const BigUnsigned &x) const
 #define IF_ALIASED(cond, op) \
     if (cond) \
     { \
-        BigUnsigned tmpThis; \
+        BigInteger tmpThis; \
         tmpThis.op; \
         *this = tmpThis; \
         return; \
     }
 
-void BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
+void BigInteger::add(const BigInteger &a, const BigInteger &b)
 {
     IF_ALIASED(this == &a || this == &b, add(a, b));
 
@@ -86,7 +86,7 @@ void BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 
     // bigInput points to the longer input
     // smallInput points to the shorter Input
-    const BigUnsigned *bigInput, *smallInput;
+    const BigInteger *bigInput, *smallInput;
     if (a.len >= b.len)
     {
         bigInput = &a;
@@ -98,7 +98,7 @@ void BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
         smallInput = &a;
     }
 
-    // Set prelimiary length and make room in this BigUnsigned
+    // Set prelimiary length and make room in this BigInteger
     len = bigInput->len + 1;
     allocate(len);
 
@@ -149,7 +149,7 @@ void BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 }
 
 
-void BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
+void BigInteger::subtract(const BigInteger &a, const BigInteger &b)
 {
     IF_ALIASED(this == &a || this == &b, subtract(a, b));
 
@@ -231,16 +231,16 @@ void BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
 // 'y' may be anything from 0 to N - 1, and 'x' may be anything from
 // 0 to 'num.len'.
 
-inline BigUnsigned::Block getShiftedBlock(const BigUnsigned &num,
-                                          BigUnsigned::Index x,
+inline BigInteger::Block getShiftedBlock(const BigInteger &num,
+                                          BigInteger::Index x,
                                           unsigned int y)
 {
-    BigUnsigned::Block part1 = (x == 0 || y == 0) ? 0 : (num.block[x - 1] >> (BigUnsigned::N - y));
-    BigUnsigned::Block part2 = (x == num.len) ? 0 : (num.block[x] << y);
+    BigInteger::Block part1 = (x == 0 || y == 0) ? 0 : (num.block[x - 1] >> (BigInteger::N - y));
+    BigInteger::Block part2 = (x == num.len) ? 0 : (num.block[x] << y);
     return part1 | part2;
 }
 
-void BigUnsigned::multiply(const BigUnsigned &a, const BigUnsigned &b)
+void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
 {
     IF_ALIASED(this == &a || this == &b, multiply(a, b));
 
@@ -309,7 +309,7 @@ void BigUnsigned::multiply(const BigUnsigned &a, const BigUnsigned &b)
 // This function mods *this by the given divisor 'b' while storing the
 // quotient in the given object 'q' and at the end *this contains the remainder.
 
-void BigUnsigned::divide(const BigUnsigned &b, BigUnsigned &q)
+void BigInteger::divide(const BigInteger &b, BigInteger &q)
 {
     if (this == &q)
     {
@@ -320,7 +320,7 @@ void BigUnsigned::divide(const BigUnsigned &b, BigUnsigned &q)
     // If b is aliased to *this or q - use a temporary copy of b
     if (this == &b || &q == &b)
     {
-        BigUnsigned tmpB(b);
+        BigInteger tmpB(b);
         divide(tmpB, q);
         return;
     }
@@ -421,7 +421,7 @@ void BigUnsigned::divide(const BigUnsigned &b, BigUnsigned &q)
 }
 
 
-void BigUnsigned::bitShiftLeft(const BigUnsigned &a, int b)
+void BigInteger::bitShiftLeft(const BigInteger &a, int b)
 {
     IF_ALIASED(this == &a, bitShiftLeft(a, b));
 
@@ -451,7 +451,7 @@ void BigUnsigned::bitShiftLeft(const BigUnsigned &a, int b)
 }
 
 
-void BigUnsigned::bitShiftRight(const BigUnsigned &a, int b)
+void BigInteger::bitShiftRight(const BigInteger &a, int b)
 {
     IF_ALIASED(this == &a, bitShiftRight(a, b));
 

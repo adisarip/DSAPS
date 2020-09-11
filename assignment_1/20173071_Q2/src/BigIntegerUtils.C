@@ -1,39 +1,48 @@
+
 #include "BigIntegerUtils.H"
-#include "BigUnsignedInABase.H"
+#include <string>
+#include <iostream>
 using namespace std;
 
-string bigUnsignedToString(const BigUnsigned &x)
+// Returns the greatest common divisor of a and b.
+BigInteger gcd(BigInteger a, BigInteger b)
 {
-	return string(BigUnsignedInABase(x));
-}
-
-BigUnsigned stringToBigUnsigned(const string &s)
-{
-	return BigUnsigned(BigUnsignedInABase(s));
-}
-
-ostream &operator <<(ostream &os, const BigUnsigned &x)
-{
-	BigUnsignedInABase::Base base;
-	long osFlags = os.flags();
-	if (osFlags & os.dec)
+    BigInteger quotient;
+    BigInteger gcd;
+    // Neat in-place alternating technique.
+    while(1)
     {
-		base = 10;
-    }
-    else if (osFlags & os.oct)
-    {
-		base = 8;
-		if (osFlags & os.showbase)
+        if (b.isZero())
         {
-			os << '0';
+            gcd = a;
+            break;
         }
-	}
-    else
-    {
-		cout << "[ERROR] Could not determine the desired base from output-stream flags";
-        return os;
+        a.divide(b, quotient);
+        if (a.isZero())
+        {
+            gcd = b;
+            break;
+        }
+        b.divide(a, quotient);
     }
-	string s = string(BigUnsignedInABase(x, base));
-	os << s;
-	return os;
+    return gcd;
+}
+
+BigInteger factorial(BigInteger a)
+{
+    unsigned long x = 1;
+    BigInteger fact(x);
+
+    while (!a.isZero())
+    {
+        fact = fact * a;
+        a = a - x;
+    }
+    return fact;
+}
+
+BigInteger exponentiation(BigInteger x, BigInteger y)
+{
+    BigInteger exp;
+    return exp;
 }

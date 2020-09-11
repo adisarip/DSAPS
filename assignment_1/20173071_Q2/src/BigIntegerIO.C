@@ -1,6 +1,7 @@
-#include "BigUnsignedInABase.H"
+#include "BigIntegerIO.H"
+using namespace std;
 
-BigUnsignedInABase::BigUnsignedInABase(const Digit *d, Index l, Base base)
+BigIntegerIO::BigIntegerIO(const Digit *d, Index l, Base base)
 :NumberBlockArray<Digit>(d, l)
 ,base(base)
 {
@@ -42,7 +43,7 @@ namespace
     }
 }
 
-BigUnsignedInABase::BigUnsignedInABase(const BigUnsigned &x, Base base)
+BigIntegerIO::BigIntegerIO(const BigInteger &x, Base base)
 {
     // Check the base
     if (base < 2 || base > 10)
@@ -54,18 +55,18 @@ BigUnsignedInABase::BigUnsignedInABase(const BigUnsigned &x, Base base)
     this->base = base;
 
     // Get an upper bound on how much space we need
-    int maxBitLenOfX = x.getLength() * BigUnsigned::N;
+    int maxBitLenOfX = x.getLength() * BigInteger::N;
     int minBitsPerDigit = bitLen(base) - 1;
     int maxDigitLenOfX = ceilingDiv(maxBitLenOfX, minBitsPerDigit);
     len = maxDigitLenOfX; // Another change to comply with `staying in bounds'.
     allocate(len); // Get the space
 
-    BigUnsigned x_copy(x), buBase(base);
+    BigInteger x_copy(x), buBase(base);
     Index digitNum = 0;
 
     while (!x_copy.isZero()) {
         // Get last digit.  This is like `lastDigit = x2 % buBase, x2 /= buBase'.
-        BigUnsigned lastDigit(x_copy);
+        BigInteger lastDigit(x_copy);
         lastDigit.divide(buBase, x_copy);
         // Save the digit.
         block[digitNum] = lastDigit.toUnsignedShort();
@@ -77,20 +78,20 @@ BigUnsignedInABase::BigUnsignedInABase(const BigUnsigned &x, Base base)
     len = digitNum;
 }
 
-BigUnsignedInABase::operator BigUnsigned() const
+BigIntegerIO::operator BigInteger() const
 {
-    BigUnsigned ans, buBase(base), temp;
+    BigInteger ans, buBase(base), temp;
     Index digitNum = len;
     while (digitNum > 0)
     {
         digitNum--;
         temp.multiply(ans, buBase);
-        ans.add(temp, BigUnsigned(block[digitNum]));
+        ans.add(temp, BigInteger(block[digitNum]));
     }
     return ans;
 }
 
-BigUnsignedInABase::BigUnsignedInABase(const std::string &s, Base base)
+BigIntegerIO::BigIntegerIO(const std::string &s, Base base)
 {
     // Check the base.
     if (base < 2 || base > 10)
@@ -129,7 +130,7 @@ BigUnsignedInABase::BigUnsignedInABase(const std::string &s, Base base)
     trimLeadingZeros();
 }
 
-BigUnsignedInABase::operator std::string() const
+BigIntegerIO::operator std::string() const
 {
     if (base > 10)
     {
@@ -153,4 +154,40 @@ BigUnsignedInABase::operator std::string() const
     std::string s_copy(s);
     delete [] s;
     return s_copy;
+}
+
+string bigIntegerToString(const BigInteger &x)
+{
+    return string(BigIntegerIO(x));
+}
+
+BigInteger stringToBigInteger(const string &s)
+{
+    return BigInteger(BigIntegerIO(s));
+}
+
+ostream &operator <<(ostream &os, const BigInteger &x)
+{
+    BigIntegerIO::Base base;
+    long osFlags = os.flags();
+    if (osFlags & os.dec)
+    {
+        base = 10;
+    }
+    else if (osFlags & os.oct)
+    {
+        base = 8;
+        if (osFlags & os.showbase)
+        {
+            os << '0';
+        }
+    }
+    else
+    {
+        cout << "[ERROR] Could not determine the desired base from output-stream flags";
+        return os;
+    }
+    string s = string(BigIntegerIO(x, base));
+    os << s;
+    return os;
 }
