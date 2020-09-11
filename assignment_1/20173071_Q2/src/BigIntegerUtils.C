@@ -1,5 +1,6 @@
 
 #include "BigIntegerUtils.H"
+#include "BigIntegerIO.H"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -43,6 +44,26 @@ BigInteger factorial(BigInteger a)
 
 BigInteger exponentiation(BigInteger x, BigInteger y)
 {
-    BigInteger exp;
-    return exp;
+    BigInteger quotient;
+    BigInteger t0 = stringToBigInteger("0");
+    BigInteger t1 = stringToBigInteger("1");
+    BigInteger t2 = stringToBigInteger("2");
+    BigInteger result = stringToBigInteger("1");
+
+    while (y > t0)
+    {
+        // y will hold the remainder after this division
+        y.divide(t2, quotient);
+        if (!y.isZero())
+        {
+            result = result * x;
+            if (quotient == t1)
+            {
+                break;
+            }
+        }
+        x = x * x;
+        y = quotient;
+    }
+    return result;
 }
