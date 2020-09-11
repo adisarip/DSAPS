@@ -19,15 +19,10 @@ Source Code Tree:
 │   └── bigint
 ├── obj
 │   ├── BigInteger.o
-│   ├── BigIntegerAlgorithms.o
 │   ├── BigIntegerIO.o
 │   ├── BigIntegerTest.o
 │   ├── BigIntegerUtils.o
-│   ├── BigUnsigned.o
-│   ├── BigUnsignedInABase.o
 │   ├── Readme.txt
-│   ├── sample.o
-│   └── testsuite.o
 └── src
     ├── BigInteger.C
     ├── BigInteger.H
