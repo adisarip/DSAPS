@@ -93,7 +93,7 @@ class BigInteger : public NumberBlockArray<unsigned long>
     BigInteger operator /(const BigInteger &x) const;
     BigInteger operator %(const BigInteger &x) const;
 
-    // Overloaded Biwise Shift Operators
+    // Overloaded bitwise shift operators
     BigInteger operator <<(int b) const;
     BigInteger operator >>(int b) const;
 
@@ -102,6 +102,14 @@ class BigInteger : public NumberBlockArray<unsigned long>
                                  Index x,
                                  unsigned int y);
 
+    Block getBlock(Index i) const
+    {
+        return (i >= mLength) ? 0 : block[i];
+    }
+    bool getBitState(Index bitIndex) const
+    {
+        return (getBlock(bitIndex / N) & (Block(1) << (bitIndex % N))) != 0;
+    }
 };
 
 inline BigInteger BigInteger::operator +(const BigInteger &x) const

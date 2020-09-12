@@ -226,6 +226,15 @@ class BigInteger : public NumberBlockArray<unsigned long>
     friend Block getShiftedBlock(const BigInteger &num,
                                  Index x,
                                  unsigned int y);
+
+    Block getBlock(Index i) const
+    {
+        return (i >= mLength) ? 0 : block[i];
+    }
+    bool getBitState(Index bitIndex) const
+    {
+        return (getBlock(bitIndex / N) & (Block(1) << (bitIndex % N))) != 0;
+    }
 };
 
 // Definitions
@@ -1000,26 +1009,18 @@ BigInteger factorial(BigInteger a)
 
 BigInteger exponentiation(BigInteger x, BigInteger y)
 {
-    BigInteger quotient;
     BigInteger t0 = stringToBigInteger("0");
-    BigInteger t1 = stringToBigInteger("1");
-    BigInteger t2 = stringToBigInteger("2");
     BigInteger result = stringToBigInteger("1");
 
     while (y > t0)
     {
-        // y will hold the remainder after this division
-        y.divide(t2, quotient);
-        if (!y.isZero())
+        if (y.getBitState(0) == true)
         {
+            // odd number
             result = result * x;
-            if (quotient == t1)
-            {
-                break;
-            }
         }
         x = x * x;
-        y = quotient;
+        y = y >> 1; // divide by 2
     }
     return result;
 }
