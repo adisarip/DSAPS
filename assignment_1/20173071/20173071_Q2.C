@@ -970,7 +970,24 @@ ostream &operator <<(ostream &os, const BigInteger &x)
 //========================== Class BigIntegerIO : End ============================//
 
 
-// Returns the greatest common divisor of a and b.
+BigInteger exponentiation(BigInteger x, BigInteger y)
+{
+    BigInteger t0 = stringToBigInteger("0");
+    BigInteger result = stringToBigInteger("1");
+
+    while (y > t0)
+    {
+        if (y.getBitState(0) == true)
+        {
+            // odd number
+            result = result * x;
+        }
+        x = x * x;
+        y = y >> 1; // divide by 2
+    }
+    return result;
+}
+
 BigInteger gcd(BigInteger a, BigInteger b)
 {
     BigInteger quotient;
@@ -1007,28 +1024,96 @@ BigInteger factorial(BigInteger a)
     return fact;
 }
 
-BigInteger exponentiation(BigInteger x, BigInteger y)
+BigInteger factorial_half_multiplication(BigInteger a)
 {
     BigInteger t0 = stringToBigInteger("0");
-    BigInteger result = stringToBigInteger("1");
+    BigInteger t1 = stringToBigInteger("1");
+    BigInteger t2 = stringToBigInteger("2");
+    BigInteger factorial = t1;
 
-    while (y > t0)
+    if (a != t0 && a != t1)
     {
-        if (y.getBitState(0) == true)
+        bool isOdd = false;
+        BigInteger computeUptoNumber = a;
+        if (a.getBitState(0) == true)
         {
-            // odd number
-            result = result * x;
+            isOdd = true;
+            computeUptoNumber = computeUptoNumber - t1;
         }
-        x = x * x;
-        y = y >> 1; // divide by 2
+
+        BigInteger nextSum = computeUptoNumber;
+        BigInteger nextMultiplier = computeUptoNumber;
+        while(nextSum >= t2)
+        {
+            factorial = factorial * nextMultiplier;
+            nextSum = nextSum - t2;
+            nextMultiplier = nextMultiplier + nextSum;
+        }
+
+        if (isOdd)
+        {
+            factorial = factorial * a;
+        }
     }
-    return result;
+    return factorial;
+}
+
+#include <cstring>
+BigInteger factorial_prime_decomposition(BigInteger a, unsigned long n)
+{
+    BigInteger t1 = stringToBigInteger("1");
+    BigInteger factorial = t1;
+    BigInteger exp;
+
+    // Prime numbers table
+    unsigned long* isPrime = new unsigned long[n+1];
+    memset(isPrime, 1, sizeof(unsigned long) * n);
+
+    for (unsigned long i=2; i<n+1; i++)
+    {
+        if (isPrime[i])
+        {
+            // update prime table
+            unsigned long j = i+i;
+            while (j <= n)
+            {
+                isPrime[j] = 0;
+                j = j + i;
+            }
+            // calculate the number of i's in (n!)
+            unsigned long sum = 0;
+            unsigned long t = i;
+            while (t <= n)
+            {
+                sum = sum + n/t;
+                t = t * i;
+            }
+             exp = exponentiation(BigInteger(i), BigInteger(sum));
+             factorial = factorial * exp;
+        }
+    }
+    return factorial;
 }
 
 //====================== Main Driver Program : Begin =====================//
 
 // vector is only used for the driver program
 #include <vector>
+#include <chrono>
+#include <sstream>
+
+vector<string> split(const string& s, char delimiter)
+{
+   vector<string> tokens;
+   string token;
+   istringstream tokenStream(s);
+   while (getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
+}
+
 int main (int argc, char* argv[])
 {
     int Q = 0;
@@ -1036,49 +1121,80 @@ int main (int argc, char* argv[])
     string a_str("");
     string b_str("");
     BigInteger A, B, result;
-    vector<string> outputLines;
 
-    cin >> Q; // read number of queries
-    for (int i=0; i<Q; i++)
+    auto start = chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
+    chrono::microseconds ms;
+
+    string s;
+    getline(cin, s);
+    Q = stoi(s);
+    vector<string> iQueries;
+    for (int i=1; i<=Q; i++)
     {
-        cin >> cmd;
+        getline(cin, s);
+        iQueries.push_back(s);
+    }
+
+    for (string s : iQueries)
+    {
+        vector<string> tokens = split(s, ' ');
+        cmd = stoi(tokens.at(0));
         switch (cmd)
         {
             case 1:
-                // Exponentiation
-                cin >> a_str >> b_str;
+                // Compute Exponentiation
+                a_str = tokens.at(1);
+                b_str = tokens.at(2);
                 A = stringToBigInteger(a_str);
                 B = stringToBigInteger(b_str);
+                start = chrono::steady_clock::now();
                 result = exponentiation(A,B);
-                outputLines.push_back(bigIntegerToString(result));
+                end = chrono::steady_clock::now();
+                ms = chrono::duration_cast<chrono::microseconds>(end - start);
+                cout << endl;
+                cout << "===================== Computing Exponention =====================" << endl;
+                cout << "EXP(" << a_str << "," << b_str << "): " << result << endl;
+                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
                 break;
             case 2:
-                // GCD
-                cin >> a_str >> b_str;
+                // Compute GCD
+                a_str = tokens.at(1);
+                b_str = tokens.at(2);
                 A = stringToBigInteger(a_str);
                 B = stringToBigInteger(b_str);
+                start = chrono::steady_clock::now();
                 result = gcd(A,B);
-                outputLines.push_back(bigIntegerToString(result));
+                end = chrono::steady_clock::now();
+                ms = chrono::duration_cast<chrono::microseconds>(end - start);
+                cout << endl;
+                cout << "========================= Computing GCD =========================" << endl;
+                cout << "A: " << a_str << endl;
+                cout << endl;
+                cout << "B: " << b_str << endl;
+                cout << endl;
+                cout << "GCD(A,B): " << result << endl;
+                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
                 break;
             case 3:
-                // Factorial
-                cin >> a_str;
+                // Compute Factorial
+                a_str = tokens.at(1);
                 A = stringToBigInteger(a_str);
-                result = factorial(A);
-                outputLines.push_back(bigIntegerToString(result));
+                start = chrono::steady_clock::now();
+                result = factorial_prime_decomposition(A, stoul(a_str));
+                end = chrono::steady_clock::now();
+                ms = chrono::duration_cast<chrono::microseconds>(end - start);
+                cout << endl;
+                cout << "====================== Computing Factorial ======================" << endl;
+                cout << "Factorial(" << a_str << "): " << result << endl;
+                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
                 break;
             default:
                 break;
         };
     }
 
-    for (string s : outputLines)
-    {
-        cout << s << endl;
-    }
-
     return 0;
 }
-
 
 //====================== Main Driver Program : End =====================//

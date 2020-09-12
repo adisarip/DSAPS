@@ -1,6 +1,7 @@
 
 #include <string>
 #include <iostream>
+#include <chrono>
 #include "BigIntegerIO.H"
 #include "BigIntegerUtils.H"
 using namespace std;
@@ -13,8 +14,12 @@ int main()
     BigInteger X(x);
     BigInteger Y(y);
 
+    chrono::time_point start = chrono::steady_clock::now();
     BigInteger result = exponentiation(X,Y);
+    chrono::time_point end = chrono::steady_clock::now();
     cout << "exp(" << x << "," << y << "): " << result << endl;
+    cout << "Execution Time: "
+         << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
     cout << endl;
 
 
@@ -25,13 +30,44 @@ int main()
     BigInteger b2 = stringToBigInteger(s2);
     cout << "\nb1: " << b1 << endl;
     cout << "\nb2: " << b2 << endl;
-    cout << "\nGCD(b1,b2): " << gcd(b1,b2) << endl;
+
+    start = chrono::steady_clock::now();
+    BigInteger GCD = gcd(b1,b2);
+    end = chrono::steady_clock::now();
+
+    cout << "\nGCD(b1,b2): " << GCD << endl;
+    cout << "Execution Time: "
+         << chrono::duration_cast<chrono::microseconds>(end - start).count() << "µs" << endl;
     cout << endl;
 
     // Computing Factorial
+    // factorial using brute force
     unsigned long f = 1000;
-    BigInteger b3(f);
-    cout << "factorial(" << f << "): " << factorial(f) << endl;
+    start = chrono::steady_clock::now();
+    BigInteger F = factorial(BigInteger(f));
+    end = chrono::steady_clock::now();
+    cout << "factorial(" << f << "): " << F << endl;
+    cout << "Execution Time: "
+         << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
+    cout << endl;
+
+    // factorial using half multiplications
+    start = chrono::steady_clock::now();
+    F = factorial_half_multiplication(BigInteger(f));
+    end = chrono::steady_clock::now();
+
+    cout << "factorial_half_multiplication(" << f << "): " << F << endl;
+    cout << "Execution Time: "
+         << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
+    cout << endl;
+
+    // factorial using prime decomposition
+    start = chrono::steady_clock::now();
+    F = factorial_prime_decomposition(BigInteger(f), f);
+    end = chrono::steady_clock::now();
+    cout << "factorial_prime_decomposition(" << f << "): " << F << endl;
+    cout << "Execution Time: "
+         << chrono::duration_cast<chrono::milliseconds>(end - start).count() << "ms" << endl;
     cout << endl;
 
     return 0;
