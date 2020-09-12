@@ -319,6 +319,8 @@ int main (int argc, char* argv[])
         iQueries.push_back(s);
     }
 
+    cout << "========== Deque states after every operation ==========" << endl;
+
     for (string s : iQueries)
     {
         vector<int> tokens = split(s, ' ');
