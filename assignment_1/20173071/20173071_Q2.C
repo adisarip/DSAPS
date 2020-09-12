@@ -528,7 +528,7 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
     }
 
     Index i, j, k;
-    unsigned int i2;
+    unsigned int n;
     Block temp;
     bool carryIn, carryOut;
 
@@ -542,16 +542,16 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
 
     for (i = 0; i < a.mLength; i++)
     {
-        for (i2 = 0; i2 < N; i2++)
+        for (n = 0; n < N; n++)
         {
-            if ((a.block[i] & (Block(1) << i2)) == 0)
+            if ((a.block[i] & (Block(1) << n)) == 0)
             {
                 continue;
             }
 
             for (j = 0, k = i, carryIn = false; j <= b.mLength; j++, k++)
             {
-                temp = block[k] + getShiftedBlock(b, j, i2);
+                temp = block[k] + getShiftedBlock(b, j, n);
                 carryOut = (temp < block[k]);
                 if (carryIn)
                 {
@@ -607,7 +607,7 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
     }
 
     Index i, j, k;
-    unsigned int i2;
+    unsigned int n;
     Block temp;
     bool borrowIn, borrowOut;
     Index origLen = mLength;
@@ -632,13 +632,13 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
     {
         i--;
         q.block[i] = 0;
-        i2 = N;
-        while (i2 > 0)
+        n = N;
+        while (n > 0)
         {
-            i2--;
+            n--;
             for (j = 0, k = i, borrowIn = false; j <= b.mLength; j++, k++)
             {
-                temp = block[k] - getShiftedBlock(b, j, i2);
+                temp = block[k] - getShiftedBlock(b, j, n);
                 borrowOut = (temp > block[k]);
                 if (borrowIn)
                 {
@@ -656,7 +656,7 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
 
             if (!borrowIn)
             {
-                q.block[i] |= (Block(1) << i2);
+                q.block[i] |= (Block(1) << n);
                 while (k > i)
                 {
                     k--;
@@ -906,7 +906,7 @@ BigIntegerIO::BigIntegerIO(const std::string &s, Base base)
 
 BigIntegerIO::operator std::string() const
 {
-    if (base <2 || base > 10)
+    if (base < 2 || base > 10)
     {
         cout << "[ERROR] The default string conversion not supported for the base: " << base << endl;
         return std::string("Invalid Base");

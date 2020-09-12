@@ -254,7 +254,7 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
 
     // Variables for the calculation
     Index i, j, k;
-    unsigned int i2;
+    unsigned int n;
     Block temp;
     bool carryIn, carryOut;
 
@@ -272,16 +272,16 @@ void BigInteger::multiply(const BigInteger &a, const BigInteger &b)
     for (i = 0; i < a.mLength; i++)
     {
         // For each 1-bit of that block...
-        for (i2 = 0; i2 < N; i2++)
+        for (n = 0; n < N; n++)
         {
-            if ((a.block[i] & (Block(1) << i2)) == 0)
+            if ((a.block[i] & (Block(1) << n)) == 0)
             {
                 continue;
             }
 
             for (j = 0, k = i, carryIn = false; j <= b.mLength; j++, k++)
             {
-                temp = block[k] + getShiftedBlock(b, j, i2);
+                temp = block[k] + getShiftedBlock(b, j, n);
                 carryOut = (temp < block[k]);
                 if (carryIn)
                 {
@@ -342,7 +342,7 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
 
     // Variables for the calculation
     Index i, j, k;
-    unsigned int i2;
+    unsigned int n;
     Block temp;
     bool borrowIn, borrowOut;
     Index origLen = mLength; // Save real length.
@@ -375,13 +375,13 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
         // For each possible left-shift of b in bits...
         // Here 'N' is the number of bits in a Block.
         q.block[i] = 0;
-        i2 = N;
-        while (i2 > 0)
+        n = N;
+        while (n > 0)
         {
-            i2--;
+            n--;
             for (j = 0, k = i, borrowIn = false; j <= b.mLength; j++, k++)
             {
-                temp = block[k] - getShiftedBlock(b, j, i2);
+                temp = block[k] - getShiftedBlock(b, j, n);
                 borrowOut = (temp > block[k]);
                 if (borrowIn)
                 {
@@ -399,7 +399,7 @@ void BigInteger::divide(const BigInteger &b, BigInteger &q)
 
             if (!borrowIn)
             {
-                q.block[i] |= (Block(1) << i2);
+                q.block[i] |= (Block(1) << n);
                 while (k > i)
                 {
                     k--;
