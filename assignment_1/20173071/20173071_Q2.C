@@ -1099,7 +1099,6 @@ BigInteger factorial_prime_decomposition(BigInteger a, unsigned long n)
 
 // vector is only used for the driver program
 #include <vector>
-#include <chrono>
 #include <sstream>
 
 vector<string> split(const string& s, char delimiter)
@@ -1121,10 +1120,6 @@ int main (int argc, char* argv[])
     string a_str("");
     string b_str("");
     BigInteger A, B, result;
-
-    auto start = chrono::steady_clock::now();
-    auto end = chrono::steady_clock::now();
-    chrono::microseconds ms;
 
     string s;
     getline(cin, s);
@@ -1148,14 +1143,8 @@ int main (int argc, char* argv[])
                 b_str = tokens.at(2);
                 A = stringToBigInteger(a_str);
                 B = stringToBigInteger(b_str);
-                start = chrono::steady_clock::now();
                 result = exponentiation(A,B);
-                end = chrono::steady_clock::now();
-                ms = chrono::duration_cast<chrono::microseconds>(end - start);
-                cout << endl;
-                cout << "===================== Computing Exponention =====================" << endl;
-                cout << "EXP(" << a_str << "," << b_str << "): " << result << endl;
-                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
+                cout << result << endl;
                 break;
             case 2:
                 // Compute GCD
@@ -1163,31 +1152,15 @@ int main (int argc, char* argv[])
                 b_str = tokens.at(2);
                 A = stringToBigInteger(a_str);
                 B = stringToBigInteger(b_str);
-                start = chrono::steady_clock::now();
                 result = gcd(A,B);
-                end = chrono::steady_clock::now();
-                ms = chrono::duration_cast<chrono::microseconds>(end - start);
-                cout << endl;
-                cout << "========================= Computing GCD =========================" << endl;
-                cout << "A: " << a_str << endl;
-                cout << endl;
-                cout << "B: " << b_str << endl;
-                cout << endl;
-                cout << "GCD(A,B): " << result << endl;
-                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
+                cout << result << endl;
                 break;
             case 3:
                 // Compute Factorial
                 a_str = tokens.at(1);
                 A = stringToBigInteger(a_str);
-                start = chrono::steady_clock::now();
-                result = factorial_prime_decomposition(A, stoul(a_str));
-                end = chrono::steady_clock::now();
-                ms = chrono::duration_cast<chrono::microseconds>(end - start);
-                cout << endl;
-                cout << "====================== Computing Factorial ======================" << endl;
-                cout << "Factorial(" << a_str << "): " << result << endl;
-                cout << "Execution Time: " << ms.count()/1000.0 << " milliseconds" << endl;
+                result = factorial_half_multiplication(A);
+                cout << result << endl;
                 break;
             default:
                 break;

@@ -318,6 +318,10 @@ void Expression::pTokenizeExpression()
             mInfixExp->enqueue(sInfixToken);
             sInfixToken = "";
         }
+        else if (c == ' ')
+        {
+            // skip spaces
+        }
         else
         {
             sInfixToken += string(1,c);
