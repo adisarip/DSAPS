@@ -1,3 +1,27 @@
 
 
-Q1: Implement an generic AVL tree
+*************** Q1: Implement a Generic AVL Tree ***************
+
+The AIM is to have end to end knowledge of the balanced binary search tree and how it can be used to solve a wide range of problems efficiently.
+
+Operations to be supported by the AVL Tree:
+-------------------------------------------
+1. Insertion
+2. Deletion
+3. Search
+4. Count occurrences of element
+5. lower_bound
+6. upper_bound
+7. Closest element to some value.
+8. K-th largest element
+9. Count the number of elements in the tree whose values fall into a given range.
+
+Constraints:
+------------
+- All the operations above should have a complexity of O(log N).
+- Duplicates are allowed (In general AVL tree don't have duplicates, however in this task you need to handle it).
+- For strings, you can simply compare them but for Class data type, you have to pass the comparator object so that you can compare two objects.
+
+References:
+-----------
+https://en.wikipedia.org/wiki/AVL_tree
