@@ -42,7 +42,7 @@ class AVLTree
     void search(T keyValue);
     void lowerBound(T keyValue);
     void upperBound(T keyValue);
-    void kthLargestElement();
+    void kthLargestElement(int k);
     void closestElement(T keyValue);
     int getCount(T keyValue);
     int getCountRange(T xKey, T yKey);
@@ -77,6 +77,7 @@ class AVLTree
                       const Node<int>* node,
                       bool isLeft);
     void pInOrderPrint(Node<T>* node);
+    void pReverseInOrderCount(Node<T>* node, int k, int& count, bool& found);
 
   private:
     Node<T>* root;
@@ -268,29 +269,126 @@ void AVLTree<T>::search(T keyValue)
     }
 }
 
+//lower bound refers to the element which has value "not less than" the key.
+// Eg: lowerBound(6) in 5 6 7 7 6 5 5 6 => 5 5 5 6 6 6 7 7 is
+// element with index 3 in the sorted list => 6
+// Hence to compute that we take the following approach
+// 1. Traverse down the tree looking for the key
+// 2. If any node is greater than the keyValue then save the node value and go left.
+// 3. Traverse until we reach NULL or the key element.
+// 4. If key element exist then return its value.
+// 5. If the key element donot exits then return the last saved node key value.
 
 template <class T>
 void AVLTree<T>::lowerBound(T keyValue)
 {
-    //@todo
+    Node<T>* x = root; // to traverse the tree
+    T sMinValue = pGetMinNode(x)->key;
+    T sMaxValue = pGetMaxNode(x)->key;
+    if (keyValue >=sMinValue && keyValue <= sMaxValue)
+    {
+        T sRetValue;
+        while (x != NULL)
+        {
+            if (keyValue < x->key)
+            {
+                sRetValue = x->key;
+                x = x->left;
+            }
+            else if (keyValue > x->key)
+            {
+                x = x->right;
+            }
+            else
+            {
+                sRetValue = x->key;
+                break;
+            }
+        }
+        cout << "LOWER-BOUND(" << keyValue << ") = " << sRetValue << endl;
+    }
+    else
+    {
+        cout << "Entered key is OUT-OF-RANGE for the tree. lower_bound donot exist." << endl;
+    }
 }
 
 template <class T>
 void AVLTree<T>::upperBound(T keyValue)
 {
-    //@todo
+    Node<T>* x = root; // to traverse the tree
+    T sMinValue = pGetMinNode(x)->key;
+    T sMaxValue = pGetMaxNode(x)->key;
+    if (keyValue >=sMinValue && keyValue <= sMaxValue)
+    {
+        T sRetValue = sMaxValue;
+        while (x != NULL)
+        {
+            if (keyValue < x->key)
+            {
+                sRetValue = x->key;
+                x = x->left;
+            }
+            else
+            {
+                x = x->right;
+            }
+        }
+        cout << "UPPER-BOUND(" << keyValue << ") = " << sRetValue << endl;
+    }
+    else
+    {
+        cout << "Entered key is OUT-OF-RANGE for the tree. upper_bound donot exist." << endl;
+    }
 }
 
+// perform a reverse in-order traversal and stop when the k elements are counted.
 template <class T>
-void AVLTree<T>::kthLargestElement()
+void AVLTree<T>::kthLargestElement(int k)
 {
-    //@todo
+    int count = 0;
+    bool found = false;
+    pReverseInOrderCount(root, k, count, found);
 }
 
+
+// largest element less than or equal to given key
 template <class T>
 void AVLTree<T>::closestElement(T keyValue)
 {
-    //@todo
+    Node<T>* x = root; // to traverse the tree
+    T sMinValue = pGetMinNode(x)->key;
+    T sMaxValue = pGetMaxNode(x)->key;
+    T sRetValue;
+    if (keyValue < sMinValue)
+    {
+        sRetValue = sMinValue;
+    }
+    else if (keyValue > sMaxValue)
+    {
+        sRetValue = sMaxValue;
+    }
+    else
+    {
+        while (x != NULL)
+        {
+            if (keyValue < x->key)
+            {
+                x = x->left;
+            }
+            else if (keyValue > x->key)
+            {
+                sRetValue = x->key;
+                x = x->right;
+            }
+            else
+            {
+                sRetValue = x->key;
+                break;
+            }
+        }
+    }
+    cout << "CLOSEST-ELEMENT(" << keyValue << ") = " << sRetValue << endl;
 }
 
 template <class T>
@@ -575,13 +673,13 @@ void AVLTree<T>::pDisplayTree(const string& prefix,
                               const Node<int>* node,
                               bool isLeft)
 {
-    if( node != nullptr )
+    if(node != NULL)
     {
         cout << prefix;
         cout << (isLeft ? "├──" : "└──" );
-        // print the value of the node
-        cout << node->key << "{" << pGetBalance(node) << "," << node->height << "," << node->count << "}" << endl;
-        // enter the next tree level - left and right branch
+        cout << node->key << "{" << pGetBalance(node) << ","
+                                 << node->height << ","
+                                 << node->count << "}" << endl;
         pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
         pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->right, false);
     }
@@ -601,6 +699,24 @@ void AVLTree<T>::pInOrderPrint(Node<T>* node)
         cout << node->key << " ";
     }
     pInOrderPrint(node->right);
+}
+
+template <class T>
+void AVLTree<T>::pReverseInOrderCount(Node<T>* node, int k, int& count, bool& found)
+{
+    if (node == NULL || count >=k)
+    {
+        return;
+    }
+    pReverseInOrderCount(node->right, k, count, found);
+    count += node->count;
+    if (count >= k && found==false)
+    {
+        cout << "Kth-LARGEST-ELEMENT(" << k << ") = " << node->key << endl;
+        found = true;
+        return;
+    }
+    pReverseInOrderCount(node->left, k, count, found);
 }
 
 #endif

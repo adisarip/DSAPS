@@ -40,6 +40,17 @@ int main (int argc, char* argv[])
     sAVLTree.print();
     sAVLTree.search(12);
     cout << "Occurances:60:" << sAVLTree.getCount(60) << endl;
+    sAVLTree.lowerBound(60);
+    sAVLTree.upperBound(60);
+    sAVLTree.kthLargestElement(2);
+    sAVLTree.kthLargestElement(3);
+    sAVLTree.kthLargestElement(4);
+    sAVLTree.kthLargestElement(5);
+    sAVLTree.closestElement(30);
+    sAVLTree.closestElement(15);
+    sAVLTree.closestElement(62);
+    sAVLTree.closestElement(4);
+    sAVLTree.closestElement(80);
 
     return 0;
 }
