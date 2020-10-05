@@ -8,8 +8,6 @@
 #include <string>
 using namespace std;
 
-// Balance factor of any node is defined as height(left subtree) - height(right subtree).
-
 template <class T>
 class Node
 {
@@ -45,23 +43,22 @@ class AVLTree
     void kthLargestElement(int k);
     void closestElement(T keyValue);
     int getCount(T keyValue);
-    int getCountRange(T xKey, T yKey);
-
-
+    int getCountInRange(T xKey, T yKey);
 
   protected:
     inline int pMax(int x, int y)
     {
-        return (x>y)?x:y;
+        return (x>y) ? x : y;
     };
-    inline int pMin(int x, int y)
+    inline int pAbs(int x)
     {
-        return (x<y)?x:y;
+        return (x<0) ? -x : x;
     };
     inline int pGetHeight(const Node<T>* node)
     {
         return ((node) ? node->height : -1);
     };
+    // Balance factor of any node is defined as: HEIGHT(left subtree) - HEIGHT(right subtree).
     inline int pGetBalance(const Node<T>* node)
     {
         return ((node) ? (pGetHeight(node->left) - pGetHeight(node->right)) : 0);
@@ -73,6 +70,7 @@ class AVLTree
     void pBalanceAVLInsert(Node<T>* node); // Balance AVL Tree after insert
     void pTransplant(Node<T>* x, Node<T>* y);
     void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
+    int pGetCountInRange(Node<T>* node, const T& xKey, const T& yKey, int& count);
     void pDisplayTree(const string& prefix,
                       const Node<int>* node,
                       bool isLeft);
@@ -359,6 +357,8 @@ void AVLTree<T>::closestElement(T keyValue)
     Node<T>* x = root; // to traverse the tree
     T sMinValue = pGetMinNode(x)->key;
     T sMaxValue = pGetMaxNode(x)->key;
+    T sLeftValue;
+    T sRightValue;
     T sRetValue;
     if (keyValue < sMinValue)
     {
@@ -374,18 +374,27 @@ void AVLTree<T>::closestElement(T keyValue)
         {
             if (keyValue < x->key)
             {
+                sRightValue = x->key;
                 x = x->left;
             }
             else if (keyValue > x->key)
             {
-                sRetValue = x->key;
+                sLeftValue = x->key;
                 x = x->right;
             }
             else
             {
-                sRetValue = x->key;
+                sRightValue = x->key;
                 break;
             }
+        }
+        if (2*keyValue > (sRightValue + sLeftValue))
+        {
+            sRetValue = sRightValue;
+        }
+        else
+        {
+            sRetValue = sLeftValue;
         }
     }
     cout << "CLOSEST-ELEMENT(" << keyValue << ") = " << sRetValue << endl;
@@ -425,10 +434,44 @@ int AVLTree<T>::getCount(T keyValue)
 
 
 template <class T>
-int AVLTree<T>::getCountRange(T xKey, T yKey)
+int AVLTree<T>::getCountInRange(T xKey, T yKey)
 {
-    //@todo
-    return 0;
+    Node<T>* node = root;
+    int count = 0;
+    pGetCountInRange(node, xKey, yKey, count);
+    return count;
+}
+
+template <class T>
+int AVLTree<T>::pGetCountInRange(Node<T>* node,
+                                 const T& xKey,
+                                 const T& yKey,
+                                 int& count)
+{
+    if (node == NULL)
+    {
+        return 0;
+    }
+
+    if (node->key == xKey && node->key == yKey)
+    {
+        return node->count;
+    }
+
+    if (node->key >= xKey && node->key <= yKey)
+    {
+        count = node->count + pGetCountInRange(node->left, xKey, yKey, count)
+                            + pGetCountInRange(node->right, xKey, yKey, count);
+    }
+    else if (node->key < xKey)
+    {
+        count = pGetCountInRange(node->right, xKey, yKey, count);
+    }
+    else
+    {
+        count = pGetCountInRange(node->left, xKey, yKey, count);
+    }
+    return count;
 }
 
 
