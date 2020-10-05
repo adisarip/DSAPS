@@ -15,14 +15,13 @@ class Node
 {
   public:
     inline Node()
-    :count(0),balance(0),height(0),parent(NULL),left(NULL),right(NULL){};
+    :count(0),height(0),parent(NULL),left(NULL),right(NULL){};
     inline Node(T keyValue)
-    :key(keyValue),count(1),balance(0),height(0),parent(NULL),left(NULL),right(NULL){};
+    :key(keyValue),count(1),height(0),parent(NULL),left(NULL),right(NULL){};
     inline ~Node(){};
 
     T key;       // Node Data
     int count;   // for handling duplicate nodes
-    int balance; // {-1,0,1}, default=0
     int height;
     Node<T>* parent;
     Node<T>* left;
@@ -40,6 +39,15 @@ class AVLTree
     void display();
     void insertNode(T keyValue);
     void deleteNode(T keyValue);
+    void search(T keyValue);
+    void lowerBound(T keyValue);
+    void upperBound(T keyValue);
+    void kthLargestElement();
+    void closestElement(T keyValue);
+    int getCount(T keyValue);
+    int getCountRange(T xKey, T yKey);
+
+
 
   protected:
     inline int pMax(int x, int y)
@@ -63,9 +71,8 @@ class AVLTree
     void pLeftRotate(Node<T>* x);
     void pRightRotate(Node<T>* x);
     void pBalanceAVLInsert(Node<T>* node); // Balance AVL Tree after insert
-    void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
-
     void pTransplant(Node<T>* x, Node<T>* y);
+    void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
     void pDisplayTree(const string& prefix,
                       const Node<int>* node,
                       bool isLeft);
@@ -228,6 +235,102 @@ void AVLTree<T>::deleteNode(T keyValue)
     {
         cout << "Node with key:" << keyValue << " not found." << endl;
     }
+}
+
+
+template <class T>
+void AVLTree<T>::search(T keyValue)
+{
+    Node<T>* x = root; // to traverse the tree
+    while (x != NULL)
+    {
+        if (keyValue < x->key)
+        {
+            x = x->left;
+        }
+        else if (keyValue > x->key)
+        {
+            x = x->right;
+        }
+        else
+        {
+            break; // keyValue == x->key
+        }
+    }
+
+    if (x != NULL)
+    {
+        cout << "Node with key:" << keyValue << " FOUND !!!" << endl;
+    }
+    else
+    {
+        cout << "Node with key:" << keyValue << " NOT FOUND !!!" << endl;
+    }
+}
+
+
+template <class T>
+void AVLTree<T>::lowerBound(T keyValue)
+{
+    //@todo
+}
+
+template <class T>
+void AVLTree<T>::upperBound(T keyValue)
+{
+    //@todo
+}
+
+template <class T>
+void AVLTree<T>::kthLargestElement()
+{
+    //@todo
+}
+
+template <class T>
+void AVLTree<T>::closestElement(T keyValue)
+{
+    //@todo
+}
+
+template <class T>
+int AVLTree<T>::getCount(T keyValue)
+{
+    Node<T>* x = root; // to traverse the tree
+    int sRetValue = 0;
+    while (x != NULL)
+    {
+        if (keyValue < x->key)
+        {
+            x = x->left;
+        }
+        else if (keyValue > x->key)
+        {
+            x = x->right;
+        }
+        else
+        {
+            break; // keyValue == x->key
+        }
+    }
+
+    if (x != NULL)
+    {
+        sRetValue = x->count;
+    }
+    else
+    {
+        cout << "Node with key:" << keyValue << " NOT FOUND !!!" << endl;
+    }
+    return sRetValue;
+}
+
+
+template <class T>
+int AVLTree<T>::getCountRange(T xKey, T yKey)
+{
+    //@todo
+    return 0;
 }
 
 
@@ -477,7 +580,7 @@ void AVLTree<T>::pDisplayTree(const string& prefix,
         cout << prefix;
         cout << (isLeft ? "├──" : "└──" );
         // print the value of the node
-        cout << node->key << "[" << pGetBalance(node) << "]" << "[" << node->height << "]" << "[" << node->count << "]" << endl;
+        cout << node->key << "{" << pGetBalance(node) << "," << node->height << "," << node->count << "}" << endl;
         // enter the next tree level - left and right branch
         pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
         pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->right, false);

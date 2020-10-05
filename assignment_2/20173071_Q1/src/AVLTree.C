@@ -28,13 +28,18 @@ int main (int argc, char* argv[])
     sAVLTree.insertNode(32);
     sAVLTree.insertNode(15);
     sAVLTree.display();
+    cout << "\nDeleting 55 ...\n" << endl;
     sAVLTree.deleteNode(55);
     sAVLTree.display();
-    sAVLTree.deleteNode(60);
+    cout << "\nDeleting 40 ...\n" << endl;
+    sAVLTree.deleteNode(40);
     sAVLTree.display();
+    cout << "\nDeleting 20 ...\n" << endl;
     sAVLTree.deleteNode(20);
     sAVLTree.display();
     sAVLTree.print();
+    sAVLTree.search(12);
+    cout << "Occurances:60:" << sAVLTree.getCount(60) << endl;
 
     return 0;
 }
