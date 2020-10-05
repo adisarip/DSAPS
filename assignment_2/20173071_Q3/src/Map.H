@@ -1,4 +1,4 @@
-Map
+
 // A template based implementation of "Ordered-Map" using AVL Tree as the internal Balanced BST
 
 #ifndef __MAP__
@@ -62,7 +62,7 @@ class Map
     void pTransplant(Node<T>* x, Node<T>* y);
     void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
     void pDisplayTree(const string& prefix,
-                      const Node<int>* node,
+                      const Node<T>* node,
                       bool isLeft,
                       bool detailFlag=false);
     void pInOrderPrint(Node<T>* node);
@@ -74,8 +74,8 @@ class Map
 
 template <class T>
 Map<T>::Map()
-:root(NULL)
-,nodeCount(0)
+:nodeCount(0)
+,root(NULL)
 {
 }
 
@@ -507,9 +507,9 @@ void Map<T>::pBalanceAVLDelete(Node<T>* node)
 
 template <class T>
 void Map<T>::pDisplayTree(const string& prefix,
-                              const Node<T>* node,
-                              bool isLeft,
-                              bool detailFlag)
+                          const Node<T>* node,
+                          bool isLeft,
+                          bool detailFlag)
 {
     if(node != NULL)
     {

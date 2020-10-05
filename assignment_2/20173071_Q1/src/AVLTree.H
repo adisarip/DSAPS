@@ -72,7 +72,7 @@ class AVLTree
     void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
     int pGetCountInRange(Node<T>* node, const T& xKey, const T& yKey, int& count);
     void pDisplayTree(const string& prefix,
-                      const Node<int>* node,
+                      const Node<T>* node,
                       bool isLeft,
                       bool detailFlag=false);
     void pInOrderPrint(Node<T>* node);
@@ -714,7 +714,7 @@ void AVLTree<T>::pBalanceAVLDelete(Node<T>* node)
 
 template <class T>
 void AVLTree<T>::pDisplayTree(const string& prefix,
-                              const Node<int>* node,
+                              const Node<T>* node,
                               bool isLeft,
                               bool detailFlag)
 {
