@@ -52,7 +52,7 @@ int main (int argc, char* argv[])
     sAVLTree.closestElement(63);
     sAVLTree.closestElement(4);
     sAVLTree.closestElement(80);
-    cout << "COUNT-ELEMENTS-RANGE[15,60] = " << sAVLTree.getCountInRange(15, 60) << endl;
+    cout << "COUNT-ELEMENTS-IN-RANGE[15,60] = " << sAVLTree.getCountInRange(15, 60) << endl;
 
     return 0;
 }

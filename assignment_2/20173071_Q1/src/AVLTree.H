@@ -34,7 +34,7 @@ class AVLTree
     AVLTree(const T& keyValue);
     ~AVLTree();
     void print();
-    void display();
+    void display(bool detailFlag=false);
     void insertNode(T keyValue);
     void deleteNode(T keyValue);
     void search(T keyValue);
@@ -73,7 +73,8 @@ class AVLTree
     int pGetCountInRange(Node<T>* node, const T& xKey, const T& yKey, int& count);
     void pDisplayTree(const string& prefix,
                       const Node<int>* node,
-                      bool isLeft);
+                      bool isLeft,
+                      bool detailFlag=false);
     void pInOrderPrint(Node<T>* node);
     void pReverseInOrderCount(Node<T>* node, int k, int& count, bool& found);
 
@@ -107,9 +108,9 @@ void AVLTree<T>::print()
 }
 
 template <class T>
-void AVLTree<T>::display()
+void AVLTree<T>::display(bool detailFlag)
 {
-    pDisplayTree("", root, false);
+    pDisplayTree("", root, false, detailFlag);
 }
 
 
@@ -714,17 +715,19 @@ void AVLTree<T>::pBalanceAVLDelete(Node<T>* node)
 template <class T>
 void AVLTree<T>::pDisplayTree(const string& prefix,
                               const Node<int>* node,
-                              bool isLeft)
+                              bool isLeft,
+                              bool detailFlag)
 {
     if(node != NULL)
     {
         cout << prefix;
         cout << (isLeft ? "├──" : "└──" );
-        cout << node->key << "{" << pGetBalance(node) << ","
-                                 << node->height << ","
-                                 << node->count << "}" << endl;
-        pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
-        pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->right, false);
+        if (detailFlag)
+            cout << node->key << "{" << pGetBalance(node) << "," << node->height << "," << node->count << "}" << endl;
+        else
+            cout << node->key << "[" << node->count << "]" << endl;
+        pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->left, true, detailFlag);
+        pDisplayTree( prefix + (isLeft ? "│   " : "    "), node->right, false, detailFlag);
     }
 }
 
