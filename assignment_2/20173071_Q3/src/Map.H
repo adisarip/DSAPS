@@ -35,6 +35,7 @@ class Map
     void insert(int key, T value);
     void erase(int key);
     bool find(int key);
+    T& operator[](int index);
     int size();   // return number of keys present in the Map
     void clear(); // remove all the elements from the Map
     void print();
@@ -66,6 +67,7 @@ class Map
                       bool isLeft,
                       bool detailFlag=false);
     void pInOrderPrint(Node<T>* node);
+    void pPostOrderDelete(Node<T>* node);
 
   private:
     int nodeCount;
@@ -256,6 +258,65 @@ bool Map<T>::find(int key)
 }
 
 template <class T>
+T& Map<T>::operator[](int index)
+{
+    // overload subscript operator
+    bool isKeyPresent = false;
+    Node<T>* x = root; // x => used to traverse the tree
+    Node<T>* y = NULL; // stores the position of new node's parent node
+    Node<T>* z = NULL; // to return
+
+    // traverse the tree to get the insert location
+    while (x != NULL)
+    {
+        y = x;
+        if (index == x->key)
+        {
+            isKeyPresent = true;
+            break;
+        }
+        else if (index < x->key)
+        {
+            x = x->left;
+        }
+        else
+        {
+            x = x->right;
+        }
+    }
+
+    // y holds the insert location here
+    if (isKeyPresent)
+    {
+        // return the node data reference
+        z = y;
+    }
+    else
+    {
+        T tmpValue;
+        T& tmpRef = tmpValue;
+        Node<T>* node = new Node<T>(index, tmpRef);
+        node->parent = y;
+        if (y == NULL)
+        {
+            root = node;
+        }
+        else if (node->key < y->key)
+        {
+            y->left = node;
+        }
+        else
+        {
+            y->right = node;
+        }
+        pBalanceAVLInsert(node);
+        nodeCount++;
+        z = node;
+    }
+    return z->data;
+}
+
+template <class T>
 int Map<T>::size()
 {
     return nodeCount;
@@ -264,8 +325,9 @@ int Map<T>::size()
 template <class T>
 void Map<T>::clear()
 {
-    //@todo
     // implement post-order-delete of nodes
+    pPostOrderDelete(root);
+    cout << "ALL NODES DELETED" << endl;
 }
 
 
@@ -533,8 +595,22 @@ void Map<T>::pInOrderPrint(Node<T>* node)
         return;
     }
     pInOrderPrint(node->left);
-    cout << "[" << node->key << "," << node->data << "]  " << endl;
+    cout << "[" << node->key << "," << node->data << "]  ";
     pInOrderPrint(node->right);
+}
+
+
+template <class T>
+void Map<T>::pPostOrderDelete(Node<T>* node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+    pPostOrderDelete(node->left);
+    pPostOrderDelete(node->right);
+    delete(node);
+    nodeCount--;
 }
 
 
