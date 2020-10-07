@@ -51,5 +51,5 @@ int main (int argc, char* argv[])
     cout << "MAP[20] = " << sMap[20] << endl;
     sMap.display();
     sMap.print();
-    sMap.clear();
+    return 0;
 }

@@ -91,6 +91,7 @@ Map<T>::Map(int key, const T& value)
 template <class T>
 Map<T>::~Map()
 {
+    clear();
 }
 
 template <class T>
