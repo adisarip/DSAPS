@@ -4,15 +4,35 @@
 
 #include "HashMap.H"
 #include <iostream>
+#include <string>
 using namespace std;
 
 int main (int argc, char* argv[])
 {
+    string aditya = "Aditya";
+    string laasya = "Laasya";
+    string lahari = "Lahari";
+    string anusha = "Anusha";
+    string chandu = "Chandu";
+    string vishwa = "Vishwanath";
     cout << ">>>> Testing Unordered Map (HashMap) <<<<" << endl;
-    HashMap<int, int> sHashMap(3, 100);
-    cout << sHashMap[3] << endl;
-    sHashMap[4] = 200;
-    cout << sHashMap[4] << endl;
-    cout << sHashMap[5] << endl;
+    HashMap<string, int> sHashMap(aditya, 1984);
+    sHashMap[laasya] = 1990;
+    cout << "HASHMAP[Lahari] = " << sHashMap[lahari] << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.insert(lahari, 1994);
+    sHashMap.insert(anusha, 1990);
+    sHashMap[chandu] = 1984;
+    sHashMap[vishwa] = 1981;
+    cout << "HASHMAP[Lahari] = " << sHashMap.fetch(lahari) << endl;
+    cout << "HASHMAP[Anusha] = " << sHashMap.fetch(anusha) << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.print();
+    sHashMap.erase(chandu);
+    cout << "FIND(Lahari) = " << sHashMap.find(lahari) << endl;
+    cout << "FIND(Aditya) = " << sHashMap.find(aditya) << endl;
+    cout << "FIND(Chandu) = " << sHashMap.find(chandu) << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.print();
     return 0;
 }

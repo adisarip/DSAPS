@@ -20,6 +20,6 @@ int keyHash(float key);
 int keyHash(double key);
 int keyHash(long double key);
 int keyHash(const char* str);
-int keyHash(const std::string& str);
+int keyHash(const string& str);
 
 #endif

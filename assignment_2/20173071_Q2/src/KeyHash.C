@@ -69,7 +69,7 @@ int keyHash(const char* str)
     return keyHash(str, strlen(str));
 }
 
-int keyHash(const std::string& str)
+int keyHash(const string& str)
 {
     return keyHash(str.data(), str.length());
 }

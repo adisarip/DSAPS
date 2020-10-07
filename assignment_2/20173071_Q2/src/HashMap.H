@@ -5,7 +5,8 @@
 #ifndef __MAP__
 #define __MAP__
 
-//#include <cstdlib>
+#include "keyHash.H"
+#include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
@@ -32,8 +33,8 @@ class HashMap
     };
 
     void insert(K key, V value);
-    V    fetch(K key) const;
-    bool find(K key) const;
+    V    fetch(K key);
+    bool find(K key);
     void erase(K key);
     V& operator[](K key);
     V  operator[](K key) const;
@@ -41,10 +42,10 @@ class HashMap
     int  size() const;
     bool isEmpty() const;
     void clear();
+    void print();
 
   protected:
     // helper functions
-    K keyHash(K key){return key;};
     int   pKeyHash(K key);
     void  pCreateBuckets(int nBuckets);
     void  pDeleteBuckets(vector<Node*>& buckets);
@@ -61,13 +62,22 @@ class HashMap
         Node* dummy = NULL;
         return pFindNode(bucket, key, dummy);
     }
-    Node* pFindNode(int bucket, K key, Node* parent) const
+    Node* pFindNode(int bucket, K key, Node* prevNode) const
     {
-        parent = NULL;
-        Node* node = buckets.at(bucket);
+        prevNode = NULL;
+        Node* node = NULL;
+        try
+        {
+            node = buckets.at(bucket);
+        }
+        catch(...)
+        {
+            node = NULL;
+        }
+
         while (node != NULL && key != node->key)
         {
-            parent = node;
+            prevNode = node;
             node = node->next;
         }
         return node;
@@ -79,83 +89,66 @@ class HashMap
 template <typename K,typename V>
 HashMap<K,V>::HashMap()
 {
-   pCreateBuckets(HASH_BUCKET_SIZE);
+    pCreateBuckets(HASH_BUCKET_SIZE);
 }
 
 template <typename K,typename V>
 HashMap<K,V>::HashMap(K key, V value)
 {
-   pCreateBuckets(HASH_BUCKET_SIZE);
-   insert(key, value);
+    pCreateBuckets(HASH_BUCKET_SIZE);
+    insert(key, value);
 }
 
 template <typename K,typename V>
 HashMap<K,V>::~HashMap()
 {
-   clear();
-}
-
-template <typename K,typename V>
-int HashMap<K,V>::size() const
-{
-   return numEntries;
-}
-
-template <typename K,typename V>
-bool HashMap<K,V>::isEmpty() const
-{
-   return (numEntries == 0);
+    clear();
 }
 
 template <typename K,typename V>
 void HashMap<K,V>::insert(K key, V value)
 {
-   (*this)[key] = value;
+    (*this)[key] = value;
 }
 
 template <typename K,typename V>
-V HashMap<K,V>::fetch(K key) const
+V HashMap<K,V>::fetch(K key)
 {
-   Node* node = pFindNode(pKeyHash(key), key);
-   if (node == NULL)
-   {
-       return V();
-   }
-   return node->value;
+    int hash = pKeyHash(key);
+    Node* node = pFindNode(hash, key);
+    if (node == NULL)
+    {
+        return V();
+    }
+    return node->value;
 }
 
 template <typename K,typename V>
-bool HashMap<K,V>::find(K key) const
+bool HashMap<K,V>::find(K key)
 {
-   return pFindNode(pKeyHash(key), key) != NULL;
+    int hash = pKeyHash(key);
+    return pFindNode(hash, key) != NULL;
 }
 
 template <typename K,typename V>
 void HashMap<K,V>::erase(K key)
 {
     int bucket = pKeyHash(key);
-    Node* parent;
-    Node* node = pFindNode(bucket, key, parent);
+    Node* prevNode = NULL;
+    Node* node = pFindNode(bucket, key, prevNode);
     if (node != NULL)
     {
-        if (parent == NULL)
+        if (prevNode == NULL)
         {
             buckets[bucket] = node->next;
         }
         else
         {
-            parent->next = node->next;
+            prevNode->next = node->next;
         }
         delete node;
         numEntries--;
     }
-}
-
-template <typename K,typename V>
-void HashMap<K,V>::clear()
-{
-    pDeleteBuckets(buckets);
-    numEntries = 0;
 }
 
 template <typename K,typename V>
@@ -185,13 +178,53 @@ V HashMap<K,V>::operator[](K key) const
    return fetch(key);
 }
 
+template <typename K,typename V>
+int HashMap<K,V>::size() const
+{
+    return numEntries;
+}
+
+template <typename K,typename V>
+bool HashMap<K,V>::isEmpty() const
+{
+    return (numEntries == 0);
+}
+
+template <typename K,typename V>
+void HashMap<K,V>::clear()
+{
+    pDeleteBuckets(buckets);
+    nBuckets = 0;
+    numEntries = 0;
+}
+
+template <typename K,typename V>
+void HashMap<K,V>::print()
+{
+    int bucketsSize = buckets.size();
+    for (int i = 0; i < bucketsSize; i++)
+    {
+        Node* node = buckets[i];
+        if (node != NULL)
+        {
+            cout << "[" << i << "]: ";
+            while (node != NULL)
+            {
+                cout << "(" << node->key << "," << node->value << ") ";
+                node = node->next;
+            }
+            cout << endl;
+        }
+    }
+}
 
 // PROTECTED members definitions
 
 template <typename K,typename V>
 int HashMap<K,V>::pKeyHash(K key)
 {
-    return (keyHash(key) % nBuckets);
+    int hash = keyHash(key);
+    return (hash % nBuckets);
 }
 
 template <typename K,typename V>
