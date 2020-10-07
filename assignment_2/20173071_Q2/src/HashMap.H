@@ -53,7 +53,7 @@ class HashMap
 
   private:
     int nBuckets;
-    int numEntries;
+    int nEntries;
     vector<Node*> buckets;
 
   protected:
@@ -147,7 +147,7 @@ void HashMap<K,V>::erase(K key)
             prevNode->next = node->next;
         }
         delete node;
-        numEntries--;
+        nEntries--;
     }
 }
 
@@ -158,7 +158,7 @@ V& HashMap<K,V>::operator[](K key)
     Node* node = pFindNode(bucket, key);
     if (node == NULL)
     {
-        if (numEntries > MAX_LOAD_PERCENTAGE * nBuckets / 100.0)
+        if (nEntries > MAX_LOAD_PERCENTAGE * nBuckets / 100.0)
         {
             pExpandAndRehash();
             bucket = pKeyHash(key);
@@ -167,7 +167,7 @@ V& HashMap<K,V>::operator[](K key)
         node = new Node(key, value);
         node->next = buckets[bucket];
         buckets[bucket] = node;
-        numEntries++;
+        nEntries++;
     }
     return node->value;
 }
@@ -181,13 +181,13 @@ V HashMap<K,V>::operator[](K key) const
 template <typename K,typename V>
 int HashMap<K,V>::size() const
 {
-    return numEntries;
+    return nEntries;
 }
 
 template <typename K,typename V>
 bool HashMap<K,V>::isEmpty() const
 {
-    return (numEntries == 0);
+    return (nEntries == 0);
 }
 
 template <typename K,typename V>
@@ -195,7 +195,7 @@ void HashMap<K,V>::clear()
 {
     pDeleteBuckets(buckets);
     nBuckets = 0;
-    numEntries = 0;
+    nEntries = 0;
 }
 
 template <typename K,typename V>
@@ -233,7 +233,7 @@ void HashMap<K,V>::pCreateBuckets(int bucketsCount)
     bucketsCount = (bucketsCount == 0) ? 1 : bucketsCount;
     buckets = vector<Node*> (bucketsCount, NULL);
     this->nBuckets = bucketsCount;
-    numEntries = 0;
+    nEntries = 0;
 }
 
 template <typename K,typename V>
