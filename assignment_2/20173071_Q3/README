@@ -2,3 +2,264 @@
 
 
 Q3: Implement an Ordered Map
+-> Used AVL Tree for balanced BST internally. 
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Ordered Map using Integers <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+└──[3,10]
+    ├──[1,20]
+    │   ├──[0,40]
+    │   └──[2,60]
+    └──[7,65]
+        ├──[5,15]
+        │   ├──[4,5]
+        │   └──[6,55]
+        └──[9,32]
+            ├──[8,75]
+            └──[10,12]
+[0,40]  [1,20]  [2,60]  [3,10]  [4,5]  [5,15]  [6,55]  [7,65]  [8,75]  [9,32]  [10,12]
+└──[3,100]
+    ├──[1,20]
+    │   ├──[0,40]
+    │   └──[2,60]
+    └──[7,65]
+        ├──[5,200]
+        │   ├──[4,5]
+        │   └──[6,55]
+        └──[9,32]
+            ├──[8,75]
+            └──[10,12]
+└──[3,100]
+    ├──[1,20]
+    │   ├──[0,40]
+    │   └──[2,60]
+    └──[8,75]
+        ├──[6,55]
+        │   ├──[4,5]
+        └──[9,32]
+            └──[10,12]
+SIZE() = 9
+└──[5,15]
+    ├──[3,100]
+    │   ├──[1,20]
+    │   │   ├──[0,40]
+    │   │   └──[2,60]
+    │   └──[4,5]
+    └──[8,75]
+        ├──[6,55]
+        │   └──[7,65]
+        └──[9,32]
+            └──[10,12]
+[0,40]  [1,20]  [2,60]  [3,100]  [4,5]  [5,15]  [6,55]  [7,65]  [8,75]  [9,32]  [10,12]
+FIND(4) = 1
+FIND(9) = 1
+FIND(20) = 0
+SIZE() = 11
+SIZE() = 11
+MAP[4] = 5
+MAP[9] = 32
+MAP[20] = 1
+[0,40]  [1,20]  [2,60]  [3,100]  [4,5]  [5,15]  [6,55]  [7,65]  [8,75]  [9,32]  [10,12]  [20,1]
+Modifying values at '4' and '9'. Adding '20'
+MAP[4] = 100
+MAP[9] = 200
+MAP[20] = 500
+└──[5,15]
+    ├──[3,100]
+    │   ├──[1,20]
+    │   │   ├──[0,40]
+    │   │   └──[2,60]
+    │   └──[4,100]
+    └──[8,75]
+        ├──[6,55]
+        │   └──[7,65]
+        └──[10,12]
+            ├──[9,200]
+            └──[20,500]
+[0,40]  [1,20]  [2,60]  [3,100]  [4,100]  [5,15]  [6,55]  [7,65]  [8,75]  [9,200]  [10,12]  [20,500]
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Ordered Map using Strings <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+└──[d,ddd]
+    ├──[b,bbb]
+    │   ├──[a,aaa]
+    │   └──[c,ccc]
+    └──[h,hhh]
+        ├──[f,fff]
+        │   ├──[e,eee]
+        │   └──[g,ggg]
+        └──[j,jjj]
+            ├──[i,iii]
+            └──[k,kkk]
+[a,aaa]  [b,bbb]  [c,ccc]  [d,ddd]  [e,eee]  [f,fff]  [g,ggg]  [h,hhh]  [i,iii]  [j,jjj]  [k,kkk]
+└──[d,ddd]
+    ├──[b,bbb]
+    │   ├──[a,aaa]
+    │   └──[c,cccc]
+    └──[h,hhh]
+        ├──[f,fff]
+        │   ├──[e,eeee]
+        │   └──[g,ggg]
+        └──[j,jjj]
+            ├──[i,iii]
+            └──[k,kkk]
+└──[d,ddd]
+    ├──[b,bbb]
+    │   ├──[a,aaa]
+    │   └──[c,cccc]
+    └──[h,hhh]
+        ├──[f,fff]
+        └──[j,jjj]
+            ├──[i,iii]
+            └──[k,kkk]
+SIZE() = 9
+└──[d,ddd]
+    ├──[b,bbb]
+    │   ├──[a,aaa]
+    │   └──[c,cccc]
+    └──[h,hhh]
+        ├──[f,fff]
+        │   ├──[e,eeeee]
+        │   └──[g,ggggg]
+        └──[j,jjj]
+            ├──[i,iii]
+            └──[k,kkk]
+[a,aaa]  [b,bbb]  [c,cccc]  [d,ddd]  [e,eeeee]  [f,fff]  [g,ggggg]  [h,hhh]  [i,iii]  [j,jjj]  [k,kkk]
+FIND(d) = 1
+FIND(i) = 1
+FIND(x) = 0
+SIZE() = 11
+SIZE() = 11
+MAP[d] = ddd
+MAP[i] = iii
+MAP[x] =
+[a,aaa]  [b,bbb]  [c,cccc]  [d,ddd]  [e,eeeee]  [f,fff]  [g,ggggg]  [h,hhh]  [i,iii]  [j,jjj]  [k,kkk]  [x,]
+Modifying values at 'd' and 'i'. Adding 'x'
+MAP[d] = dddd
+MAP[i] = iiii
+MAP[x] = xxxx
+└──[h,hhh]
+    ├──[d,dddd]
+    │   ├──[b,bbb]
+    │   │   ├──[a,aaa]
+    │   │   └──[c,cccc]
+    │   └──[f,fff]
+    │       ├──[e,eeeee]
+    │       └──[g,ggggg]
+    └──[j,jjj]
+        ├──[i,iiii]
+        └──[k,kkk]
+            └──[x,xxxx]
+[a,aaa]  [b,bbb]  [c,cccc]  [d,dddd]  [e,eeeee]  [f,fff]  [g,ggggg]  [h,hhh]  [i,iiii]  [j,jjj]  [k,kkk]  [x,xxxx]
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Ordered Map using Class Objects <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    │       ├──[1040:Aruna:M.C.A:aruna@gmail.com,ARUNA]
+    │       └──[1060:Sharanya:F.tech:tubli@gmail.com,TUBLI]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+
+Updating entries for 'anusha' & 'aruna' ...
+
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    │       ├──[1040:Aruna:M.C.A:aruna@gmail.com,ARUNA_ARUNA]
+    │       └──[1060:Sharanya:F.tech:tubli@gmail.com,TUBLI]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+
+Erasing entries of 'aruna' & 'tubli' ...
+
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+SIZE() = 10
+
+Inserting entries for 'aruna' & 'tubli' ...
+
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    │       ├──[1040:Aruna:M.C.A:aruna@gmail.com,ARU_ARUNA]
+    │       └──[1060:Sharanya:F.tech:tubli@gmail.com,TUB_TUBLI]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+FIND(chandu) = 1
+FIND(aditya) = 1
+FIND(kumar) = 0
+SIZE() = 12
+
+MAP[chandu] = CHANDU
+MAP[aditya] = ADITYA
+MAP[kumar] =
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    │       ├──[1040:Aruna:M.C.A:aruna@gmail.com,ARU_ARUNA]
+    │       └──[1060:Sharanya:F.tech:tubli@gmail.com,TUB_TUBLI]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+            ├──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[2000:Kumar:E.C.E:kumar@gmail.com,]
+
+Modifying values at 'chandu' and 'aditya'. Adding 'kumar'
+
+MAP[chandu] = CHANDU_CHANDU
+MAP[aditya] = ADITYA_ADITYA
+MAP[kumar] = KUMAR_KUMAR
+
+└──[1070:Rama:B.Ed:rama@gmail.com,RAMA]
+    ├──[1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU_CHANDU]
+    │   ├──[1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]
+    │   │   ├──[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA_ADITYA]
+    │   │   └──[1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]
+    │   └──[1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]
+    │       ├──[1040:Aruna:M.C.A:aruna@gmail.com,ARU_ARUNA]
+    │       └──[1060:Sharanya:F.tech:tubli@gmail.com,TUB_TUBLI]
+    └──[1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]
+        ├──[1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]
+        └──[1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]
+            ├──[1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]
+            └──[2000:Kumar:E.C.E:kumar@gmail.com,KUMAR_KUMAR]
+
+[1000:Aditya:C.S.E:aditya@gmail.com,ADITYA_ADITYA]  [1010:Laasya:M.Pharm:laasya@gmail.com,LAASYA]  [1020:Anusha:M.Pharm:anusha@gmail.com,ANUSHA_ANUSHA]  [1030:Chandrashekhar:M.S.C:chandu@gmail.com,CHANDU_CHANDU]  [1040:Aruna:M.C.A:aruna@gmail.com,ARU_ARUNA]  [1050:Suraj:C.S.E:suraj@gmail.com,SURAJ]  [1060:Sharanya:F.tech:tubli@gmail.com,TUB_TUBLI]  [1070:Rama:B.Ed:rama@gmail.com,RAMA]  [1080:Kamalakar:B.Com:kambu@gmail.com,KAMBU]  [1090:Kameshwar:B.Com:chacha@gmail.com,CHACHA]  [1100:Vijaya:B.Ed:chachi@gmail.com,CHACHI]  [1200:Lahari:E.C.E:lahari@gmail.com,LAHARI]  [2000:Kumar:E.C.E:kumar@gmail.com,KUMAR_KUMAR]
+
+ALL NODES DELETED
+ALL NODES DELETED
+ALL NODES DELETED

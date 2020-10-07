@@ -9,13 +9,14 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
+    cout << "\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Unordered Map (HashMap) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n" << endl;
     string aditya = "Aditya";
     string laasya = "Laasya";
     string lahari = "Lahari";
     string anusha = "Anusha";
     string chandu = "Chandu";
     string vishwa = "Vishwanath";
-    cout << ">>>> Testing Unordered Map (HashMap) <<<<" << endl;
+
     HashMap<string, int> sHashMap(aditya, 1984);
     sHashMap[laasya] = 1990;
     cout << "HASHMAP[Lahari] = " << sHashMap[lahari] << endl;
@@ -28,13 +29,16 @@ int main (int argc, char* argv[])
     cout << "HASHMAP[Anusha] = " << sHashMap.fetch(anusha) << endl;
     cout << "SIZE() = " << sHashMap.size() << endl;
     sHashMap.print();
-    cout << "Erasing Chandu ..." << endl;
+    cout << "\nErasing Chandu ...\n" << endl;
     sHashMap.erase(chandu);
     sHashMap.print();
+    cout << endl;
     cout << "FIND(Lahari) = " << sHashMap.find(lahari) << endl;
     cout << "FIND(Aditya) = " << sHashMap.find(aditya) << endl;
     cout << "FIND(Chandu) = " << sHashMap.find(chandu) << endl;
     cout << "SIZE() = " << sHashMap.size() << endl;
+    cout << endl;
+    cout << "Updating data in HasMap ...\n" << endl;
     sHashMap.insert(aditya, 1994);
     sHashMap.insert(laasya, 2004);
     sHashMap.insert(lahari, 2002);

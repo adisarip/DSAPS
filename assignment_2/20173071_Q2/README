@@ -1,3 +1,41 @@
 
 
 Q2: Implement an Unordered Map (Hashing)
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Unordered Map (HashMap) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+HASHMAP[Lahari] = 0
+SIZE() = 3
+HASHMAP[Lahari] = 1994
+HASHMAP[Anusha] = 1990
+SIZE() = 6
+[6]: (Vishwanath,1981) 
+[9]: (Aditya,1984) 
+[36]: (Lahari,1994) 
+[42]: (Anusha,1990) 
+[69]: (Chandu,1984) 
+[97]: (Laasya,1990) 
+
+Erasing Chandu ...
+
+[6]: (Vishwanath,1981) 
+[9]: (Aditya,1984) 
+[36]: (Lahari,1994) 
+[42]: (Anusha,1990) 
+[97]: (Laasya,1990) 
+
+FIND(Lahari) = 1
+FIND(Aditya) = 1
+FIND(Chandu) = 0
+SIZE() = 5
+
+Updating data in HasMap ...
+
+[6]: (Vishwanath,1981) 
+[9]: (Aditya,2006) 
+[36]: (Lahari,2002) 
+[42]: (Anusha,1990) 
+[79]: (ashuna,1987) 
+[97]: (Laasya,2004) 

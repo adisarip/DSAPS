@@ -9,33 +9,33 @@
 using namespace std;
 
 
-template <class T>
+template <class K, class V>
 class Node
 {
   public:
-    inline Node(int key, T value)
-    :key(key),data(value),height(0),parent(NULL),left(NULL),right(NULL){};
+    inline Node(K keyParm, V value)
+    :key(keyParm),data(value),height(0),parent(NULL),left(NULL),right(NULL){};
     inline ~Node(){};
 
-    int key;  // key to index the data
-    T data;   // Node Data
+    K key;  // key to index the data
+    V data;   // Node Data
     int height;
-    Node<T>* parent;
-    Node<T>* left;
-    Node<T>* right;
+    Node<K,V>* parent;
+    Node<K,V>* left;
+    Node<K,V>* right;
 };
 
-template <class T>
+template <class K, class V>
 class Map
 {
   public:
     Map();
-    Map(int key, const T& value);
+    Map(K key, const V& value);
     ~Map();
-    void insert(int key, T value);
-    void erase(int key);
-    bool find(int key);
-    T& operator[](int index);
+    void insert(K key, V value);
+    void erase(K key);
+    bool find(K key);
+    V& operator[](K index);
     int size();   // return number of keys present in the Map
     void clear(); // remove all the elements from the Map
     void print();
@@ -46,76 +46,76 @@ class Map
     {
         return (x>y) ? x : y;
     };
-    inline int pGetHeight(const Node<T>* node)
+    inline int pGetHeight(const Node<K,V>* node)
     {
         return ((node) ? node->height : -1);
     };
     // Balance factor of any node is defined as: HEIGHT(left subtree) - HEIGHT(right subtree).
-    inline int pGetBalance(const Node<T>* node)
+    inline int pGetBalance(const Node<K,V>* node)
     {
         return ((node) ? (pGetHeight(node->left) - pGetHeight(node->right)) : 0);
     };
-    Node<T>* pGetMinNode(Node<T>* node);
-    Node<T>* pGetMaxNode(Node<T>* node);
-    void pLeftRotate(Node<T>* x);
-    void pRightRotate(Node<T>* x);
-    void pBalanceAVLInsert(Node<T>* node); // Balance AVL Tree after insert
-    void pTransplant(Node<T>* x, Node<T>* y);
-    void pBalanceAVLDelete(Node<T>* node); // Balance AVL Tree after delete
+    Node<K,V>* pGetMinNode(Node<K,V>* node);
+    Node<K,V>* pGetMaxNode(Node<K,V>* node);
+    void pLeftRotate(Node<K,V>* x);
+    void pRightRotate(Node<K,V>* x);
+    void pBalanceAVLInsert(Node<K,V>* node); // Balance AVL Tree after insert
+    void pTransplant(Node<K,V>* x, Node<K,V>* y);
+    void pBalanceAVLDelete(Node<K,V>* node); // Balance AVL Tree after delete
     void pDisplayTree(const string& prefix,
-                      const Node<T>* node,
+                      const Node<K,V>* node,
                       bool isLeft,
                       bool detailFlag=false);
-    void pInOrderPrint(Node<T>* node);
-    void pPostOrderDelete(Node<T>* node);
+    void pInOrderPrint(Node<K,V>* node);
+    void pPostOrderDelete(Node<K,V>* node);
 
   private:
     int nodeCount;
-    Node<T>* root;
+    Node<K,V>* root;
 };
 
-template <class T>
-Map<T>::Map()
+template <class K, class V>
+Map<K,V>::Map()
 :nodeCount(0)
 ,root(NULL)
 {
 }
 
-template <class T>
-Map<T>::Map(int key, const T& value)
+template <class K, class V>
+Map<K,V>::Map(K key, const V& value)
 {
-    root = new Node<T>(key, value);
+    root = new Node<K,V>(key, value);
     nodeCount++;
 }
 
-template <class T>
-Map<T>::~Map()
+template <class K, class V>
+Map<K,V>::~Map()
 {
     clear();
 }
 
-template <class T>
-void Map<T>::print()
+template <class K, class V>
+void Map<K,V>::print()
 {
     // print in-order traversal of the tree
     pInOrderPrint(root);
     cout << endl;
 }
 
-template <class T>
-void Map<T>::display(bool detailFlag)
+template <class K, class V>
+void Map<K,V>::display(bool detailFlag)
 {
     pDisplayTree("", root, false, detailFlag);
 }
 
 // INSERT A NODE
 
-template <class T>
-void Map<T>::insert(int key, T value)
+template <class K, class V>
+void Map<K,V>::insert(K key, V value)
 {
     bool isDuplicateKey = false;
-    Node<T>* x = root; // x => used to traverse the tree
-    Node<T>* y = NULL; // stores the position of new node's parent node
+    Node<K,V>* x = root; // x => used to traverse the tree
+    Node<K,V>* y = NULL; // stores the position of new node's parent node
 
     // traverse the tree to get the insert location
     while (x != NULL)
@@ -144,7 +144,7 @@ void Map<T>::insert(int key, T value)
     }
     else
     {
-        Node<T>* node = new Node<T>(key, value);
+        Node<K,V>* node = new Node<K,V>(key, value);
         node->parent = y;
         if (y == NULL)
         {
@@ -164,10 +164,10 @@ void Map<T>::insert(int key, T value)
 }
 
 
-template <class T>
-void Map<T>::erase(int key)
+template <class K, class V>
+void Map<K,V>::erase(K key)
 {
-    Node<T>* x = root; // to traverse the tree
+    Node<K,V>* x = root; // to traverse the tree
     while (x != NULL)
     {
         if (key < x->key)
@@ -206,7 +206,7 @@ void Map<T>::erase(int key)
         }
         else
         {
-            Node<T>* y = pGetMinNode(x->right); // get minimum node in right subtree
+            Node<K,V>* y = pGetMinNode(x->right); // get minimum node in right subtree
             if (y->parent != x)
             {
                 pTransplant(y, y->right);
@@ -230,11 +230,11 @@ void Map<T>::erase(int key)
     }
 }
 
-template <class T>
-bool Map<T>::find(int key)
+template <class K, class V>
+bool Map<K,V>::find(K key)
 {
     bool isPresent = true;
-    Node<T>* x = root; // to traverse the tree
+    Node<K,V>* x = root; // to traverse the tree
     while (x != NULL)
     {
         if (key < x->key)
@@ -258,14 +258,14 @@ bool Map<T>::find(int key)
     return isPresent;
 }
 
-template <class T>
-T& Map<T>::operator[](int index)
+template <class K, class V>
+V& Map<K,V>::operator[](K index)
 {
     // overload subscript operator
     bool isKeyPresent = false;
-    Node<T>* x = root; // x => used to traverse the tree
-    Node<T>* y = NULL; // stores the position of new node's parent node
-    Node<T>* z = NULL; // to return
+    Node<K,V>* x = root; // x => used to traverse the tree
+    Node<K,V>* y = NULL; // stores the position of new node's parent node
+    Node<K,V>* z = NULL; // to return
 
     // traverse the tree to get the insert location
     while (x != NULL)
@@ -294,9 +294,9 @@ T& Map<T>::operator[](int index)
     }
     else
     {
-        T tmpValue;
-        T& tmpRef = tmpValue;
-        Node<T>* node = new Node<T>(index, tmpRef);
+        V tmpValue;
+        V& tmpRef = tmpValue;
+        Node<K,V>* node = new Node<K,V>(index, tmpRef);
         node->parent = y;
         if (y == NULL)
         {
@@ -317,14 +317,14 @@ T& Map<T>::operator[](int index)
     return z->data;
 }
 
-template <class T>
-int Map<T>::size()
+template <class K, class V>
+int Map<K,V>::size()
 {
     return nodeCount;
 }
 
-template <class T>
-void Map<T>::clear()
+template <class K, class V>
+void Map<K,V>::clear()
 {
     // implement post-order-delete of nodes
     pPostOrderDelete(root);
@@ -334,8 +334,8 @@ void Map<T>::clear()
 
 // PROTECTED Helper functions
 
-template <class T>
-Node<T>* Map<T>::pGetMinNode(Node<T>* node)
+template <class K, class V>
+Node<K,V>* Map<K,V>::pGetMinNode(Node<K,V>* node)
 {
     while (node->left != NULL)
     {
@@ -344,8 +344,8 @@ Node<T>* Map<T>::pGetMinNode(Node<T>* node)
     return node;
 }
 
-template <class T>
-Node<T>* Map<T>::pGetMaxNode(Node<T>* node)
+template <class K, class V>
+Node<K,V>* Map<K,V>::pGetMaxNode(Node<K,V>* node)
 {
     while (node->right != NULL)
     {
@@ -354,10 +354,10 @@ Node<T>* Map<T>::pGetMaxNode(Node<T>* node)
     return node;
 }
 
-template <class T>
-void Map<T>::pLeftRotate(Node<T>* x)
+template <class K, class V>
+void Map<K,V>::pLeftRotate(Node<K,V>* x)
 {
-    Node<T>* y = x->right;
+    Node<K,V>* y = x->right;
     x->right = y->left;
     if (y->left != NULL)
     {
@@ -387,10 +387,10 @@ void Map<T>::pLeftRotate(Node<T>* x)
 }
 
 
-template <class T>
-void Map<T>::pRightRotate(Node<T>* x)
+template <class K, class V>
+void Map<K,V>::pRightRotate(Node<K,V>* x)
 {
-    Node<T>* y = x->left;
+    Node<K,V>* y = x->left;
     x->left = y->right;
     if (y->right != NULL)
     {
@@ -419,17 +419,17 @@ void Map<T>::pRightRotate(Node<T>* x)
     y->height = 1 + pMax(pGetHeight(y->left), pGetHeight(y->right));
 }
 
-template <class T>
-void Map<T>::pBalanceAVLInsert(Node<T>* node)
+template <class K, class V>
+void Map<K,V>::pBalanceAVLInsert(Node<K,V>* node)
 {
-    Node<T>* y = node->parent;
-    Node<T>* z = node;
+    Node<K,V>* y = node->parent;
+    Node<K,V>* z = node;
 
     while (y != NULL)
     {
         y->height = 1 + pMax(pGetHeight(y->left), pGetHeight(y->right));
 
-        Node<T>* x = y->parent;
+        Node<K,V>* x = y->parent;
         if (pGetBalance(x) <= -2 || pGetBalance(x) >= 2)
         {
             if(y == x->left)
@@ -464,8 +464,8 @@ void Map<T>::pBalanceAVLInsert(Node<T>* node)
 }
 
 // move y-subtree to x
-template <class T>
-void Map<T>::pTransplant(Node<T>* x, Node<T>* y)
+template <class K, class V>
+void Map<K,V>::pTransplant(Node<K,V>* x, Node<K,V>* y)
 {
     if (x->parent == NULL)
     {
@@ -489,19 +489,19 @@ void Map<T>::pTransplant(Node<T>* x, Node<T>* y)
     }
 }
 
-template <class T>
-void Map<T>::pBalanceAVLDelete(Node<T>* node)
+template <class K, class V>
+void Map<K,V>::pBalanceAVLDelete(Node<K,V>* node)
 {
-    Node<T>* p = node;
+    Node<K,V>* p = node;
 
     while (p != NULL)
     {
         p->height = 1 + pMax(pGetHeight(p->left), pGetHeight(p->right));
         if (pGetBalance(p) <= -2 || pGetBalance(p) >= 2)
         {
-            Node<T>* x;
-            Node<T>* y;
-            Node<T>* z;
+            Node<K,V>* x;
+            Node<K,V>* y;
+            Node<K,V>* z;
             x = p;
 
             // Store the taller child of x in y
@@ -568,11 +568,11 @@ void Map<T>::pBalanceAVLDelete(Node<T>* node)
 
 // Additional helper functions
 
-template <class T>
-void Map<T>::pDisplayTree(const string& prefix,
-                          const Node<T>* node,
-                          bool isLeft,
-                          bool detailFlag)
+template <class K, class V>
+void Map<K,V>::pDisplayTree(const string& prefix,
+                            const Node<K,V>* node,
+                            bool isLeft,
+                            bool detailFlag)
 {
     if(node != NULL)
     {
@@ -588,8 +588,8 @@ void Map<T>::pDisplayTree(const string& prefix,
 }
 
 
-template <class T>
-void Map<T>::pInOrderPrint(Node<T>* node)
+template <class K, class V>
+void Map<K,V>::pInOrderPrint(Node<K,V>* node)
 {
     if (node == NULL)
     {
@@ -601,8 +601,8 @@ void Map<T>::pInOrderPrint(Node<T>* node)
 }
 
 
-template <class T>
-void Map<T>::pPostOrderDelete(Node<T>* node)
+template <class K, class V>
+void Map<K,V>::pPostOrderDelete(Node<K,V>* node)
 {
     if (node == NULL)
     {
