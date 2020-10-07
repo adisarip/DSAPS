@@ -50,10 +50,6 @@ class AVLTree
     {
         return (x>y) ? x : y;
     };
-    inline int pAbs(int x)
-    {
-        return (x<0) ? -x : x;
-    };
     inline int pGetHeight(const Node<T>* node)
     {
         return ((node) ? node->height : -1);
@@ -260,11 +256,11 @@ void AVLTree<T>::search(T keyValue)
 
     if (x != NULL)
     {
-        cout << "Node with key:" << keyValue << " FOUND !!!" << endl;
+        cout << "SEARCH(" << keyValue << "): = FOUND" << endl;
     }
     else
     {
-        cout << "Node with key:" << keyValue << " NOT FOUND !!!" << endl;
+        cout << "SEARCH(" << keyValue << "): = NOT FOUND" << endl;
     }
 }
 
@@ -284,7 +280,7 @@ void AVLTree<T>::lowerBound(T keyValue)
     Node<T>* x = root; // to traverse the tree
     T sMinValue = pGetMinNode(x)->key;
     T sMaxValue = pGetMaxNode(x)->key;
-    if (keyValue >=sMinValue && keyValue <= sMaxValue)
+    if (keyValue >= sMinValue && keyValue <= sMaxValue)
     {
         T sRetValue;
         while (x != NULL)
@@ -318,7 +314,7 @@ void AVLTree<T>::upperBound(T keyValue)
     Node<T>* x = root; // to traverse the tree
     T sMinValue = pGetMinNode(x)->key;
     T sMaxValue = pGetMaxNode(x)->key;
-    if (keyValue >=sMinValue && keyValue <= sMaxValue)
+    if (keyValue >= sMinValue && keyValue <= sMaxValue)
     {
         T sRetValue = sMaxValue;
         while (x != NULL)
@@ -389,7 +385,7 @@ void AVLTree<T>::closestElement(T keyValue)
                 break;
             }
         }
-        if (2*keyValue > (sRightValue + sLeftValue))
+        if ((keyValue + keyValue) > (sRightValue + sLeftValue))
         {
             sRetValue = sRightValue;
         }
@@ -750,7 +746,7 @@ void AVLTree<T>::pInOrderPrint(Node<T>* node)
 template <class T>
 void AVLTree<T>::pReverseInOrderCount(Node<T>* node, int k, int& count, bool& found)
 {
-    if (node == NULL || count >=k)
+    if (node == NULL || count >= k)
     {
         return;
     }

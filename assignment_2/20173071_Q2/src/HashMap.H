@@ -14,6 +14,8 @@ using namespace std;
 static const int HASH_BUCKET_SIZE    = 101;
 static const int MAX_LOAD_PERCENTAGE = 70;
 
+
+// A node in the Hash Table
 template <typename K, typename V>
 class Node
 {
@@ -51,16 +53,14 @@ class HashMap
     int   pKeyHash(K key);
     void  pCreateBuckets(int bucketsCount);
     void  pDeleteBuckets(vector<Node<K,V>*>& buckets);
-    void  pExpandAndRehash();
+    void  pExpandAndReHash();
+    Node<K,V>* pFindNode(int bucket, K key) const;
+    Node<K,V>* pFindNode(int bucket, K key, Node<K,V>* prevNode) const;
 
   private:
     int nBuckets;
     int nEntries;
     vector<Node<K,V>*> buckets;
-
-  protected:
-    Node<K,V>* pFindNode(int bucket, K key) const;
-    Node<K,V>* pFindNode(int bucket, K key, Node<K,V>* prevNode) const;
 };
 
 // PUBLIC definitions
@@ -139,7 +139,7 @@ V& HashMap<K,V>::operator[](K key)
     {
         if (nEntries > MAX_LOAD_PERCENTAGE * nBuckets / 100.0)
         {
-            pExpandAndRehash();
+            pExpandAndReHash();
             bucket = pKeyHash(key);
         }
         V value = V();
@@ -233,7 +233,7 @@ void HashMap<K,V>::pDeleteBuckets(vector<Node<K,V>*>& buckets)
 }
 
 template <typename K,typename V>
-void HashMap<K,V>::pExpandAndRehash()
+void HashMap<K,V>::pExpandAndReHash()
 {
     vector<Node<K,V>*> oldBuckets = buckets;
     int oldBucketsSize = oldBuckets.size();

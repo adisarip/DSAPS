@@ -28,11 +28,18 @@ int main (int argc, char* argv[])
     cout << "HASHMAP[Anusha] = " << sHashMap.fetch(anusha) << endl;
     cout << "SIZE() = " << sHashMap.size() << endl;
     sHashMap.print();
+    cout << "Erasing Chandu ..." << endl;
     sHashMap.erase(chandu);
+    sHashMap.print();
     cout << "FIND(Lahari) = " << sHashMap.find(lahari) << endl;
     cout << "FIND(Aditya) = " << sHashMap.find(aditya) << endl;
     cout << "FIND(Chandu) = " << sHashMap.find(chandu) << endl;
     cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.insert(aditya, 1994);
+    sHashMap.insert(laasya, 2004);
+    sHashMap.insert(lahari, 2002);
+    sHashMap.insert(string("ashuna"), 1987);
+    sHashMap.insert(aditya, 2006);
     sHashMap.print();
     return 0;
 }
