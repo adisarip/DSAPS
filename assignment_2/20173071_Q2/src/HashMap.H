@@ -47,7 +47,7 @@ class HashMap
   protected:
     // helper functions
     int   pKeyHash(K key);
-    void  pCreateBuckets(int nBuckets);
+    void  pCreateBuckets(int bucketsCount);
     void  pDeleteBuckets(vector<Node*>& buckets);
     void  pExpandAndRehash();
 
@@ -228,11 +228,11 @@ int HashMap<K,V>::pKeyHash(K key)
 }
 
 template <typename K,typename V>
-void HashMap<K,V>::pCreateBuckets(int nBuckets)
+void HashMap<K,V>::pCreateBuckets(int bucketsCount)
 {
-    nBuckets = (nBuckets == 0) ? 1 : nBuckets;
-    buckets = vector<Node*> (nBuckets, NULL);
-    this->nBuckets = nBuckets;
+    bucketsCount = (bucketsCount == 0) ? 1 : bucketsCount;
+    buckets = vector<Node*> (bucketsCount, NULL);
+    this->nBuckets = bucketsCount;
     numEntries = 0;
 }
 
