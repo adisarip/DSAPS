@@ -15,22 +15,24 @@ static const int HASH_BUCKET_SIZE    = 101;
 static const int MAX_LOAD_PERCENTAGE = 70;
 
 template <typename K, typename V>
+class Node
+{
+  public:
+    Node(K keyParm, V valueParm):key(keyParm),value(valueParm),next(NULL){};
+    ~Node(){};
+    K     key;
+    V     value;
+    Node<K,V>* next;
+};
+
+
+template <typename K, typename V>
 class HashMap
 {
   public:
     HashMap();
     HashMap(K key, V value);
     ~HashMap();
-
-    class Node
-    {
-      public:
-        Node(K keyParm, V valueParm):key(keyParm),value(valueParm),next(NULL){};
-        ~Node(){};
-        K     key;
-        V     value;
-        Node* next;
-    };
 
     void insert(K key, V value);
     V    fetch(K key);
@@ -48,40 +50,17 @@ class HashMap
     // helper functions
     int   pKeyHash(K key);
     void  pCreateBuckets(int bucketsCount);
-    void  pDeleteBuckets(vector<Node*>& buckets);
+    void  pDeleteBuckets(vector<Node<K,V>*>& buckets);
     void  pExpandAndRehash();
 
   private:
     int nBuckets;
     int nEntries;
-    vector<Node*> buckets;
+    vector<Node<K,V>*> buckets;
 
   protected:
-    Node* pFindNode(int bucket, K key) const
-    {
-        Node* dummy = NULL;
-        return pFindNode(bucket, key, dummy);
-    }
-    Node* pFindNode(int bucket, K key, Node* prevNode) const
-    {
-        prevNode = NULL;
-        Node* node = NULL;
-        try
-        {
-            node = buckets.at(bucket);
-        }
-        catch(...)
-        {
-            node = NULL;
-        }
-
-        while (node != NULL && key != node->key)
-        {
-            prevNode = node;
-            node = node->next;
-        }
-        return node;
-    }
+    Node<K,V>* pFindNode(int bucket, K key) const;
+    Node<K,V>* pFindNode(int bucket, K key, Node<K,V>* prevNode) const;
 };
 
 // PUBLIC definitions
@@ -115,7 +94,7 @@ template <typename K,typename V>
 V HashMap<K,V>::fetch(K key)
 {
     int hash = pKeyHash(key);
-    Node* node = pFindNode(hash, key);
+    Node<K,V>* node = pFindNode(hash, key);
     if (node == NULL)
     {
         return V();
@@ -134,8 +113,8 @@ template <typename K,typename V>
 void HashMap<K,V>::erase(K key)
 {
     int bucket = pKeyHash(key);
-    Node* prevNode = NULL;
-    Node* node = pFindNode(bucket, key, prevNode);
+    Node<K,V>* prevNode = NULL;
+    Node<K,V>* node = pFindNode(bucket, key, prevNode);
     if (node != NULL)
     {
         if (prevNode == NULL)
@@ -155,7 +134,7 @@ template <typename K,typename V>
 V& HashMap<K,V>::operator[](K key)
 {
     int bucket = pKeyHash(key);
-    Node* node = pFindNode(bucket, key);
+    Node<K,V>* node = pFindNode(bucket, key);
     if (node == NULL)
     {
         if (nEntries > MAX_LOAD_PERCENTAGE * nBuckets / 100.0)
@@ -204,7 +183,7 @@ void HashMap<K,V>::print()
     int bucketsSize = buckets.size();
     for (int i = 0; i < bucketsSize; i++)
     {
-        Node* node = buckets[i];
+        Node<K,V>* node = buckets[i];
         if (node != NULL)
         {
             cout << "[" << i << "]: ";
@@ -231,21 +210,21 @@ template <typename K,typename V>
 void HashMap<K,V>::pCreateBuckets(int bucketsCount)
 {
     bucketsCount = (bucketsCount == 0) ? 1 : bucketsCount;
-    buckets = vector<Node*> (bucketsCount, NULL);
+    buckets = vector<Node<K,V>*> (bucketsCount, NULL);
     this->nBuckets = bucketsCount;
     nEntries = 0;
 }
 
 template <typename K,typename V>
-void HashMap<K,V>::pDeleteBuckets(vector<Node*>& buckets)
+void HashMap<K,V>::pDeleteBuckets(vector<Node<K,V>*>& buckets)
 {
     int bucketsSize = buckets.size();
     for (int i = 0; i < bucketsSize; i++)
     {
-        Node* node = buckets[i];
+        Node<K,V>* node = buckets[i];
         while (node != NULL)
         {
-            Node* tmpNode = node->next;
+            Node<K,V>* tmpNode = node->next;
             delete node;
             node = tmpNode;
         }
@@ -256,17 +235,46 @@ void HashMap<K,V>::pDeleteBuckets(vector<Node*>& buckets)
 template <typename K,typename V>
 void HashMap<K,V>::pExpandAndRehash()
 {
-    vector<Node*> oldBuckets = buckets;
+    vector<Node<K,V>*> oldBuckets = buckets;
     int oldBucketsSize = oldBuckets.size();
     pCreateBuckets(oldBucketsSize * 2 + 1);
     for (int i = 0; i < oldBucketsSize; i++)
     {
-        for (Node* node = oldBuckets[i]; node != NULL; node = node->next)
+        for (Node<K,V>* node = oldBuckets[i]; node != NULL; node = node->next)
         {
             insert(node->key, node->value);
         }
     }
     pDeleteBuckets(oldBuckets);
+}
+
+template <typename K,typename V>
+Node<K,V>* HashMap<K,V>::pFindNode(int bucket, K key) const
+{
+    Node<K,V>* dummy = NULL;
+    return pFindNode(bucket, key, dummy);
+}
+
+template <typename K,typename V>
+Node<K,V>* HashMap<K,V>::pFindNode(int bucket, K key, Node<K,V>* prevNode) const
+{
+    prevNode = NULL;
+    Node<K,V>* node = NULL;
+    try
+    {
+        node = buckets.at(bucket);
+    }
+    catch(...)
+    {
+        node = NULL;
+    }
+
+    while (node != NULL && key != node->key)
+    {
+        prevNode = node;
+        node = node->next;
+    }
+    return node;
 }
 
 #endif
