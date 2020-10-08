@@ -1,0 +1,51 @@
+
+
+Files List:
+===========
+20173071_Q1
+.
+├── Makefile
+├── README
+├── bin
+│   └── README
+├── obj
+│   └── README
+└── src
+    ├── AVLTree.C
+    ├── AVLTree.H
+    └── README
+
+3 directories, 7 files
+
+
+AVLTree.H: A Template based implementation of Self-Balancing Binary Search Tree.
+AVLTree.C: Driver program to test the AVLTree implementation.
+
+
+USAGE:
+======
+AVLTree<T> sAvl                      : Tree Creation. O(log N)
+AVLTree<T> sAvl(T key)               : Tree Creation. O(log N)
+sAvl.insertNode(T key)               : Insert a node into the AVL Tree. O(log N)
+sAvl.deleteNode(T key)               : Delete a node from the AVL Tree. O(log N)
+sAvl.search(T key)                   : Search for a node using key. O(log N)
+sAvl.lowerBound(T key)               : The first element in the range [first, last) that is not less
+                                       than (i.e. greater or equal to) key, or last if no such
+                                       element is found. O(log N)
+sAvl.upperBound(T key)               : The first element in the range [first, last) that is greater
+                                       than key, or last if no such element is found. O(log N)
+sAvl.kthLargestElement(int k)        : k'th largest element in the Tree (including duplicates).
+sAvl.closestElement(T key)           : Closest Element to some key value. O(log N)
+sAvl.getCount(T keyValue)            : Count occurrences of key element. O(log N)
+sAvl.getCountInRange(T xKey, T yKey) : Count the number of elements in the tree whose values fall
+                                       into a given range. O(log N)
+sAvl.print()                         : In order printing of Tree data. [O(N)]
+sAvl.display()                       : Display the Tree structure - key[count]. [O(N)]
+sAvl.display(true)                   : Display the Tree structure. Some detailed information on each
+                                       node like - key{height, balance factor}. [O(N)]
+
+Supported values for "T" data type:
+- All Primary data types like : int, float, double, string etc.
+- Class data types are also supported however the following operators should be overloaded.
+  ==, !=, <, >, <=, >= and <<(output stream printing).
+  In addition Class should have a default constructor with no arguments.

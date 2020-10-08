@@ -1,0 +1,50 @@
+
+
+Files List:
+===========
+20173071_Q3
+.
+├── Makefile
+├── README
+├── bin
+│   └── README
+├── obj
+│   └── README
+└── src
+    ├── Map.C
+    ├── Map.H
+    └── README
+
+3 directories, 7 files
+
+
+Map.H: A Template based implementation of Ordered-Map with internal Self-Balancing Binary Search
+       Tree (AVL Tree).
+Map.C: Driver program to test the Map implementation.
+
+
+USAGE:
+======
+Map<K,V> sMap                 : Map Creation
+Map<K,V> sMap(K key, V value) : Map Creation
+sMap.insert(K key, V value)   : Insert the key value pair. If the key is already present, update
+                                it's current value. [O(log n)]
+sMap.erase(K key)             : Erase the given key from the map if it is present. [O(log N)]
+sMap.find(K key)              : (return boolean): Returns 'true' if key was found else return
+                                'false'. [O(log N)]
+sMap[key]                     : (subscript operator) – Access the element with the given key(if it
+                                is present in the map). Also, you should be able to modify the value
+                                at this key using this operator. If the value is not present, then
+                                insert this key with it’s corresponding assigned value. [O(log N)]
+sMap.size()                   : Return number of keys present in the Map
+sMap.clear()                  : Remove all the elements from the Map. [O(N)]
+sMap.print()                  : In order printing of Map data. [O(N)]
+sMap.display()                : Display the map in tree structure. [key, value]. [O(N)]
+sMap.display(true)            : Display the map in tree structure. Some detailed information on each
+                                node like key {value, height, balance factor}. [O(N)]
+
+Supported values for "K" and "V" data types:
+- All Primary data types like : int, float, double, unsigned int, long, string etc ... are supported.
+- Class data types are also supported however the following operators should be overloaded.
+  ==, !=, <, >, <=, >= and <<(output stream printing).
+  In addition Class should have a default constructor with no arguments.

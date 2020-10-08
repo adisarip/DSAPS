@@ -1,0 +1,54 @@
+
+
+Files List:
+===========
+20173071_Q2
+.
+├── Makefile
+├── README
+├── bin
+│   └── README
+├── obj
+│   └── README
+└── src
+    ├── HashMap.C
+    ├── HashMap.H
+    ├── KeyHash.C
+    ├── KeyHash.H
+    └── README
+
+3 directories, 9 files
+
+
+KeyHash.H: Declarations of all the Hashing interfaces for different data types
+KeyHash.C: Definitions of all the Hashing interfaces for different data types. The Hashing algorithm
+           used here is called DJB2 after the initials of its inventor - Daniel J. Bernstein,
+           Professor of Mathematics at the University of Illinois at Chicago. The general method is
+           called "linear congruence", which is also used in random-number generators.
+HashMap.H: A template based implementation for Unordered-Map (Hash Table) - "HashMap".
+HashMap.C: A driver program to test the HaspMap class and its interfaces.
+
+
+USAGE:
+======
+HashMap<K,V> sMap                    : HashMap Creation.
+HashMap<K,V> sMap(K key, V value)    : HashMap Creation.
+sMap.insert(K key, V value)          : Insert a key-value pair
+sMap.erase(K key)                    : Erase if key is present otherwise do nothing
+sMap.find(K key)                     : (return boolean): Returns 'true' if key was found else return
+                                       'false'.
+sMap[key]                            : (subscript operator) – Access the element with the given
+                                       key(if it is present in the map). Also, you should be able to
+                                       modify the value at this key using this operator. If the
+                                       value is not present, then insert this key with it’s
+                                       corresponding assigned value.
+sMap.size()                          : Return number of entries present in the Hash Table.
+sMap.isEmpty()                       : Return 'true' if Hash Table is empty, 'false' otherwise.
+sMap.clear()                         : Remove all the elements from the Hash Table.
+sMap.print()                         : Print the Hash Table (Map) in a tabular form.
+
+Supported values for "K" and "V" data types:
+"K" - Only hashable primary data types like : int, float, double, unsigned int, long, string etc ...
+      are supported.
+"V" - Any data type primary or Class data types are supported.
+      Class should have a default constructor.
