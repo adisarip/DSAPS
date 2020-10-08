@@ -1,19 +1,50 @@
 
-// A template based implementation of "Unordered-Map" using Hash Table as the internal data structure.
-// using chaining to handle the collisions
 
-#ifndef __MAP__
-#define __MAP__
-
-#include "keyHash.H"
 #include <iostream>
+#include <cstddef> // For size_t
+#include <cstring> // For strlen
 #include <string>
 #include <vector>
 using namespace std;
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Hashing Functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< //
+
+static const int KEY_HASH_SEED = 5381;
+static const int KEY_HASH_MULTIPLIER = 33;
+static const int KEY_HASH_MASK = unsigned(-1) >> 1;
+
+// computing hash keys for various data types
+int keyHash(int key) { return key & KEY_HASH_MASK; }
+int keyHash(bool key) { return keyHash(static_cast<int>(key)); }
+int keyHash(char key) { return keyHash(static_cast<int>(key)); }
+int keyHash(unsigned int key) { return keyHash(static_cast<int>(key)); }
+int keyHash(short key) { return keyHash(static_cast<int>(key)); }
+int keyHash(unsigned short key) { return keyHash(static_cast<int>(key)); }
+int keyHash(long key) { return keyHash(static_cast<int>(key)); }
+int keyHash(unsigned long key) { return keyHash(static_cast<int>(key)); }
+// This specific algorithm used here is called djb2 after the initials of its inventor,
+// Daniel J. Bernstein, Professor of Mathematics at the University of Illinois at Chicago.
+// The general method is called "linear congruence", which is also used in random-number generators.
+int keyHash(const char* data, size_t numBytes)
+{
+    unsigned hash = KEY_HASH_SEED;
+    for (size_t i = 0; i < numBytes; i++)
+    {
+        hash = KEY_HASH_MULTIPLIER * hash + data[i];
+    }
+    return keyHash(hash);
+}
+int keyHash(const char* str) { return keyHash(str, strlen(str)); }
+int keyHash(const string& str) { return keyHash(str.data(), str.length()); }
+int keyHash(float key) { return keyHash(reinterpret_cast<const char*> (&key), sizeof(float)); }
+int keyHash(double key) { return keyHash(reinterpret_cast<const char*> (&key), sizeof(double)); }
+int keyHash(long double key) { return keyHash(reinterpret_cast<const char*> (&key), sizeof(long double)); }
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>> Unordered Map (Hash Table) Implementation <<<<<<<<<<<<<<<<<<<<<<<<< //
+
 static const int HASH_BUCKET_SIZE    = 101;
 static const int MAX_LOAD_PERCENTAGE = 70;
-
 
 // A node in the Hash Table
 template <typename K, typename V>
@@ -277,4 +308,47 @@ Node<K,V>* HashMap<K,V>::pFindNode(int bucket, K key, Node<K,V>* prevNode) const
     return node;
 }
 
-#endif
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DRIVER PROGRAM <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< //
+
+// Test the functionality of the HashMap Class
+
+int main (int argc, char* argv[])
+{
+    cout << "\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Testing Unordered Map (HashMap) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n" << endl;
+    string aditya = "Aditya";
+    string laasya = "Laasya";
+    string lahari = "Lahari";
+    string anusha = "Anusha";
+    string chandu = "Chandu";
+    string vishwa = "Vishwanath";
+
+    HashMap<string, int> sHashMap(aditya, 1984);
+    sHashMap[laasya] = 1990;
+    cout << "HASHMAP[Lahari] = " << sHashMap[lahari] << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.insert(lahari, 1994);
+    sHashMap.insert(anusha, 1990);
+    sHashMap[chandu] = 1984;
+    sHashMap[vishwa] = 1981;
+    cout << "HASHMAP[Lahari] = " << sHashMap.fetch(lahari) << endl;
+    cout << "HASHMAP[Anusha] = " << sHashMap.fetch(anusha) << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    sHashMap.print();
+    cout << "\nErasing Chandu ...\n" << endl;
+    sHashMap.erase(chandu);
+    sHashMap.print();
+    cout << endl;
+    cout << "FIND(Lahari) = " << sHashMap.find(lahari) << endl;
+    cout << "FIND(Aditya) = " << sHashMap.find(aditya) << endl;
+    cout << "FIND(Chandu) = " << sHashMap.find(chandu) << endl;
+    cout << "SIZE() = " << sHashMap.size() << endl;
+    cout << endl;
+    cout << "Updating data in HasMap ...\n" << endl;
+    sHashMap.insert(aditya, 1994);
+    sHashMap.insert(laasya, 2004);
+    sHashMap.insert(lahari, 2002);
+    sHashMap.insert(string("ashuna"), 1987);
+    sHashMap.insert(aditya, 2006);
+    sHashMap.print();
+    return 0;
+}
