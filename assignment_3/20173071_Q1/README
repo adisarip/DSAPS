@@ -1,0 +1,36 @@
+
+Assignment-3 Q1: (Implementation of suffix array)
+================
+Implement a Suffix Array that is capable of performing following operations on Strings in a most
+efficient way.
+
+OPERATIONS:
+Q1a. Given a string S print its minimum lexicographic rotation. O(nlogn)
+Q1b. Given an integer K, print the length of the longest substring that appears in the text at least
+K times.If no such substring exist, print -1. O(nlogn)
+Q1c. Given a strings S determine its longest substring that is also a palindrome. In the case of
+multiple solutions, print the lexicographically smallest palindrome. O(nlogn)
+
+
+EXAMPLE:
+Input String: S = “dcabca”
+Q1a. All possible rotation are “dcabca” , “cabcad” , “abcadc” , “bcadca” , “cadcab” , “adcabc”.
+Among all lexicographically minimum is “abcadc”.
+Q1b. If K=2, then “ca” is a substring that appears twice and its length is 2, so the answer is 2.
+Q1c. Since only length 1 substring are palindromic, and among them “a” is lexicographically
+smallest, hence answer is “a”.
+
+
+INPUT FORMAT:
+- You will be given a large string S (length <= 10 ^5 ).
+- Print the corresponding output for each case Q1a, Q1b and Q1c.
+
+
+CONSTRAINTS:
+- 1 <= String length <= 10^5
+- String consist of either Lower/Upper Case Alphabet and Numeric digits.
+
+
+SUBMISSION FORMAT:
+- For each subpart implement a different code. Submit it as rollnumber_Q1a.cpp, rollnumber_Q1b.cpp,
+rollnumber_Q1c.cpp. We will run each file separately.

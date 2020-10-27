@@ -1,0 +1,33 @@
+
+Assignment-3 Q2: (TRIE Implementation)
+================
+- You will be given an array A of N numbers and Q queries.
+- Each query will contain a single integer 'x'.
+- You have to find then maximum xor of x from any number in A.
+
+
+CONSTRAINTS:
+• 1 <= N, q <= 10 ^ 5
+• 1 <= A[i] <= 10 ^ 12
+
+
+INPUT:
+First Line contains N and q
+Second line contains N space separated intergers.
+Next q lines contain q queries of single integer
+
+
+EXAMPLE:
+3 2
+1 2 3
+4
+5
+
+EXPLANATION:
+A = {1, 2, 3}
+Case 1: x = 4 Maximum xor of x is with 3, therefore answer is 4 xor 3 = 7
+Case 2: x = 5 Maximum xor of x is with 2, therefore answer is 5 xor 2 = 7
+
+
+SUBMISSION FORMAT:
+Submit it as rollnumber_Q2.cpp
