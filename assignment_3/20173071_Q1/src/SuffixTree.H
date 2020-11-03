@@ -1,22 +1,14 @@
 
 // Implementation of Suffix Tree using Ukkonen Algorithm
-// References:
-// http://web.stanford.edu/~mjkay/gusfield.pdf
-// https://www.cs.helsinki.fi/u/ukkonen/SuffixT1withFigs.pdf
+// References: http://web.stanford.edu/~mjkay/gusfield.pdf
+//             https://www.cs.helsinki.fi/u/ukkonen/SuffixT1withFigs.pdf
 
+#ifndef SUFFIXTREE_H
+#define SUFFIXTREE_H
+
+#include "Node.H"
 #include <string>
 using namespace std;
-
-const int ALPHABET = 26;
-
-struct Node
-{
-    int start;
-    int end;
-    int suffixIndex;
-    Node* suffixLink;
-    Node* child[ALPHABET];
-};
 
 class SuffixTree
 {
@@ -26,17 +18,21 @@ class SuffixTree
     SuffixTree(string textInput);
     ~SuffixTree();
 
-    int getEdgeLength(Node* node);
-    int getStringLength();
+    // getter setter members
+    inline void   setInputString(string str) {inputString = str;}
+    inline string getInputString() {return inputString;}
+    inline int    getStringLength() {return inputString.length();}
+    inline int    getEdgeLength(Node* node) {return (node->end - node->start + 1);}
+
+    // public interface
     void clear();
     void buildTree();
     void displayTree();
 
   protected:
-
-    Node* pCreateNode(int startIndex, int endIndex);
-    int pTraverse(Node* currentNode);
+    void pSetSuffixIndex(Node* node, int index=0);
     void pExtendSuffixTree(int position);
+    int  pTraverse(Node* currentNode);
     void pDeleteNode(Node* node);
 
     // Root Node of the Suffix Tree
@@ -52,3 +48,5 @@ class SuffixTree
     int    nodesCount;   // Total number of nodes in the Suffix Tree
     string inputString;  // Input string for which we are creating the Suffix Tree
 };
+
+#endif //SUFFIXTREE_H

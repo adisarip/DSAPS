@@ -3,8 +3,6 @@
 
 
 #include "SuffixTree.H"
-#include <iostream>
-#include <string>
 using namespace std;
 
 SuffixTree::SuffixTree()
@@ -37,16 +35,6 @@ SuffixTree::~SuffixTree()
     clear();
 }
 
-int SuffixTree::getEdgeLength(Node* node)
-{
-    return (node->end - node->start + 1);
-}
-
-int SuffixTree::getStringLength()
-{
-    return inputString.length();
-}
-
 void SuffixTree::clear()
 {
     pDeleteNode(root);
@@ -54,6 +42,15 @@ void SuffixTree::clear()
 
 void SuffixTree::buildTree()
 {
+    // create the root node
+    root = new Node(-1, -1); // Root Node (startIndex, endIndex) = (-1, -1)
+    activeNode = root;
+
+    for (int i=0; i < getStringLength(); i++)
+    {
+        pExtendSuffixTree(i);
+    }
+    pSetSuffixIndex(root);
 }
 
 void SuffixTree::displayTree()
@@ -62,18 +59,36 @@ void SuffixTree::displayTree()
 
 // Protected member definitions
 
-Node* SuffixTree::pCreateNode(int startIndex, int endIndex)
+void SuffixTree::pSetSuffixIndex(Node* node, int index)
 {
-    return NULL;
+    // perform a DFS to set the suffix indices of all the nodes
+    if (NULL == node)
+    {
+        return;
+    }
+
+    int isLeafNode = true;
+    for (int i=0; i < ALPHABET; i++)
+    {
+        if (NULL != node->child[i])
+        {
+            isLeafNode = false;
+            pSetSuffixIndex(node->child[i], index + getEdgeLength(node->child[i]));
+        }
+    }
+    if (isLeafNode)
+    {
+        node->suffixIndex = getStringLength() - index;
+    }
+}
+
+void SuffixTree::pExtendSuffixTree(int position)
+{
 }
 
 int SuffixTree::pTraverse(Node* currentNode)
 {
     return 0;
-}
-
-void SuffixTree::pExtendSuffixTree(int position)
-{
 }
 
 void SuffixTree::pDeleteNode(Node* node)
