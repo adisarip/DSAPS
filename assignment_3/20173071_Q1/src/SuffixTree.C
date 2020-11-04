@@ -1,7 +1,7 @@
-
 // Implementation
 
 
+#include "Node.H"
 #include "SuffixTree.H"
 using namespace std;
 
@@ -35,6 +35,31 @@ SuffixTree::~SuffixTree()
     clear();
 }
 
+void SuffixTree::setInputString(string str)
+{
+    inputString = str;
+}
+
+string SuffixTree::getInputString()
+{
+    return inputString;
+}
+
+int SuffixTree::getStringLength()
+{
+    return inputString.length();
+}
+
+int SuffixTree::getEdgeLength(Node* node)
+{
+    return (node->end - node->start + 1);
+}
+
+int SuffixTree::getNodesCount()
+{
+    return nodesCount;
+}
+
 void SuffixTree::clear()
 {
     pDeleteNode(root);
@@ -55,6 +80,39 @@ void SuffixTree::buildTree()
 
 void SuffixTree::displayTree()
 {
+    pDisplay(root);
+}
+
+void SuffixTree::pDisplay(Node* node, int index)
+{
+    if (NULL == node)
+    {
+        return;
+    }
+    if (node->start != -1)
+    {
+        for (int i = node->start; i <= node->end; i++)
+        {
+            cout << inputString[i];
+        }
+    }
+    int isLeafNode = true;
+    for (int i=0; i < MAX_CHAR_SET; i++)
+    {
+        if (NULL != node->child[i])
+        {
+            if (isLeafNode && node->start != -1)
+            {
+                cout << " [" << node->suffixIndex  << "]" << endl;
+            }
+            isLeafNode = false;
+            pSetSuffixIndex(node->child[i], index + getEdgeLength(node->child[i]));
+        }
+    }
+    if (isLeafNode)
+    {
+        cout << " [" << node->suffixIndex  << "]" << endl;
+    }
 }
 
 // Protected member definitions
@@ -68,7 +126,7 @@ void SuffixTree::pSetSuffixIndex(Node* node, int index)
     }
 
     int isLeafNode = true;
-    for (int i=0; i < ALPHABET; i++)
+    for (int i=0; i < MAX_CHAR_SET; i++)
     {
         if (NULL != node->child[i])
         {
@@ -82,14 +140,94 @@ void SuffixTree::pSetSuffixIndex(Node* node, int index)
     }
 }
 
-void SuffixTree::pExtendSuffixTree(int position)
+SuffixTree::ActivePointStatus SuffixTree::pUpdateActivePoint(Node* currentNode)
 {
+    SuffixTree::ActivePointStatus sStatus = SuffixTree::ActivePointUnchanged;
+    int sEdgeLength = getEdgeLength(currentNode);
+    if (activeLength >= sEdgeLength)
+    {
+        activeEdge = (int) inputString[activeEdge + sEdgeLength] - (int)'a';
+        activeLength = activeLength - sEdgeLength;
+        activeNode = currentNode;
+        sStatus = SuffixTree::ActivePointChanged;
+    }
+    return sStatus;
 }
 
-int SuffixTree::pTraverse(Node* currentNode)
+int SuffixTree::pGetCharacterID(int position)
 {
-    return 0;
+    return (int)inputString[position] - (int)' '; // returning ASCII value of the character
 }
+
+void SuffixTree::pExtendSuffixTree(int position)
+{
+    suffixCount++;
+    int leafEnd = position;
+    while (suffixCount > 0)
+    {
+        if (activeLength == 0)
+        {
+            activeEdge = pGetCharacterID(position);
+        }
+
+        if (activeNode->child[activeEdge] == NULL)
+        {
+            // Extension Rule-2
+            activeNode->child[activeEdge] = new Node(position, leafEnd);
+            if (internalNode != NULL)
+            {
+                internalNode->suffixLink = activeNode;
+                internalNode = NULL;
+            }
+        }
+        else
+        {
+            Node* next = activeNode->child[activeEdge];
+            if (pUpdateActivePoint(next))
+            {
+                continue; // start from the next internal node
+            }
+
+            if (inputString[next->start + activeLength] == inputString[position])
+            {
+                if (internalNode != NULL && activeNode != root)
+                {
+                    internalNode->suffixLink = activeNode;
+                    internalNode = NULL;
+                }
+                activeLength++;
+                break; // stop processing after Rule-3
+            }
+
+            // Split the edge for creating new nodes
+            int splitEndIndex = next->start + activeLength - 1;
+            Node* splitNode = new Node(next->start, splitEndIndex);
+            activeNode->child[activeEdge] = splitNode;
+
+            // new leaf node coming out of internal node
+            splitNode->child[pGetCharacterID(position)] = new Node(position, leafEnd);
+
+            next->start = next->start + activeLength;
+            splitNode->child[activeEdge] = next;
+            if (internalNode != NULL)
+            {
+                internalNode->suffixLink = splitNode;
+            }
+            internalNode = splitNode;
+        }
+        suffixCount--;
+        if (activeNode == root && activeLength > 0)
+        {
+            activeLength--;
+            activeEdge = pGetCharacterID(position - suffixCount + 1);
+        }
+        else if (activeNode != root)
+        {
+            activeNode = activeNode->suffixLink;
+        }
+    }
+}
+
 
 void SuffixTree::pDeleteNode(Node* node)
 {
@@ -99,7 +237,7 @@ void SuffixTree::pDeleteNode(Node* node)
         return;
     }
 
-    for (int i=0; i < ALPHABET; i++)
+    for (int i=0; i < MAX_CHAR_SET; i++)
     {
         if (node->child[i] != NULL)
         {

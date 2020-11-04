@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-const int ALPHABET = 26;
+const int MAX_CHAR_SET = 100; // ASCII character set range is -> 0x00 to 0x5F
 
 class Node
 {
@@ -16,10 +16,10 @@ class Node
     int end;
     int suffixIndex;
     Node* suffixLink;
-    Node* child[ALPHABET];
+    Node* child[MAX_CHAR_SET];
 
     Node(int startIndex, int endIndex, Node* node = NULL);
-    ~Node();
+    ~Node(){};
 };
 
 Node::Node(int startIndex, int endIndex, Node* node)
@@ -28,7 +28,7 @@ Node::Node(int startIndex, int endIndex, Node* node)
 ,suffixIndex(-1)
 ,suffixLink(node)
 {
-    for (int i=0; i < ALPHABET; i++)
+    for (int i=0; i < MAX_CHAR_SET; i++)
     {
         child[i] = NULL;
     }

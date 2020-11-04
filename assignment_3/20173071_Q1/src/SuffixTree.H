@@ -6,10 +6,10 @@
 #ifndef SUFFIXTREE_H
 #define SUFFIXTREE_H
 
-#include "Node.H"
 #include <string>
 using namespace std;
 
+class Node;
 class SuffixTree
 {
   public:
@@ -18,21 +18,31 @@ class SuffixTree
     SuffixTree(string textInput);
     ~SuffixTree();
 
+    enum ActivePointStatus
+    {
+        ActivePointUnchanged = 0,
+        ActivePointChanged   = 1,
+    };
+
     // getter setter members
-    inline void   setInputString(string str) {inputString = str;}
-    inline string getInputString() {return inputString;}
-    inline int    getStringLength() {return inputString.length();}
-    inline int    getEdgeLength(Node* node) {return (node->end - node->start + 1);}
+    void setInputString(string str);
+    string getInputString();
+    int getStringLength();
+    int getEdgeLength(Node* node);
+    int getNodesCount();
 
     // public interface
     void clear();
     void buildTree();
     void displayTree();
 
+
   protected:
     void pSetSuffixIndex(Node* node, int index=0);
     void pExtendSuffixTree(int position);
-    int  pTraverse(Node* currentNode);
+    SuffixTree::ActivePointStatus pUpdateActivePoint(Node* currentNode);
+    int pGetCharacterID(int position);
+    void pDisplay(Node* node, int index=0);
     void pDeleteNode(Node* node);
 
     // Root Node of the Suffix Tree
