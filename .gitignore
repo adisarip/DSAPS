@@ -2,6 +2,8 @@
 test_programs/
 bkp_src/
 bkp_functs.txt
+a.out
+test.c
 
 #misc
 cscope.out

@@ -32,7 +32,7 @@ SuffixTree::SuffixTree(string textInput)
 SuffixTree::~SuffixTree()
 {
     // delete all the nodes from the Suffix Tree
-    clear();
+    //clear();
 }
 
 void SuffixTree::setInputString(string str)
@@ -71,11 +71,15 @@ void SuffixTree::buildTree()
     root = new Node(-1, -1); // Root Node (startIndex, endIndex) = (-1, -1)
     activeNode = root;
 
+    cout << "buildTree(): 1" << endl;
     for (int i=0; i < getStringLength(); i++)
     {
+        cout << "buildTree(): 2." << i << endl;
         pExtendSuffixTree(i);
     }
+    cout << "buildTree(): 3" << endl;
     pSetSuffixIndex(root);
+    cout << "buildTree(): 4" << endl;
 }
 
 void SuffixTree::displayTree()
@@ -106,7 +110,7 @@ void SuffixTree::pDisplay(Node* node, int index)
                 cout << " [" << node->suffixIndex  << "]" << endl;
             }
             isLeafNode = false;
-            pSetSuffixIndex(node->child[i], index + getEdgeLength(node->child[i]));
+            pDisplay(node->child[i], index + getEdgeLength(node->child[i]));
         }
     }
     if (isLeafNode)
@@ -146,7 +150,7 @@ SuffixTree::ActivePointStatus SuffixTree::pUpdateActivePoint(Node* currentNode)
     int sEdgeLength = getEdgeLength(currentNode);
     if (activeLength >= sEdgeLength)
     {
-        activeEdge = (int) inputString[activeEdge + sEdgeLength] - (int)'a';
+        activeEdge = (int) inputString[activeEdge + sEdgeLength] - (int)' ';
         activeLength = activeLength - sEdgeLength;
         activeNode = currentNode;
         sStatus = SuffixTree::ActivePointChanged;
@@ -163,30 +167,44 @@ void SuffixTree::pExtendSuffixTree(int position)
 {
     suffixCount++;
     int leafEnd = position;
+    cout << "pExtendSuffixTree():1: " << position << endl;
     while (suffixCount > 0)
     {
         if (activeLength == 0)
         {
             activeEdge = pGetCharacterID(position);
         }
+        cout << "pExtendSuffixTree():2.0: " << suffixCount << ": " << inputString[position] << endl;
+
+        if (activeNode == NULL)
+        {
+            cout << "activeNode is NULL" << endl;
+            break;
+        }
 
         if (activeNode->child[activeEdge] == NULL)
         {
             // Extension Rule-2
+            cout << "pExtendSuffixTree():2.1: " << suffixCount << endl;
             activeNode->child[activeEdge] = new Node(position, leafEnd);
             if (internalNode != NULL)
             {
+                cout << "pExtendSuffixTree():2.2: " << suffixCount << endl;
                 internalNode->suffixLink = activeNode;
                 internalNode = NULL;
             }
+            cout << "pExtendSuffixTree():2.3: " << suffixCount << endl;
         }
         else
         {
+            cout << "pExtendSuffixTree():2.4.1: " << suffixCount << endl;
             Node* next = activeNode->child[activeEdge];
+            cout << "pExtendSuffixTree():2.4.2: " << suffixCount << endl;
             if (pUpdateActivePoint(next))
             {
                 continue; // start from the next internal node
             }
+            cout << "pExtendSuffixTree():2.5: " << suffixCount << endl;
 
             if (inputString[next->start + activeLength] == inputString[position])
             {
@@ -198,6 +216,7 @@ void SuffixTree::pExtendSuffixTree(int position)
                 activeLength++;
                 break; // stop processing after Rule-3
             }
+            cout << "pExtendSuffixTree():2.6: " << suffixCount << endl;
 
             // Split the edge for creating new nodes
             int splitEndIndex = next->start + activeLength - 1;
@@ -215,6 +234,7 @@ void SuffixTree::pExtendSuffixTree(int position)
             }
             internalNode = splitNode;
         }
+        cout << "pExtendSuffixTree():3: " << suffixCount << endl;
         suffixCount--;
         if (activeNode == root && activeLength > 0)
         {
@@ -225,6 +245,7 @@ void SuffixTree::pExtendSuffixTree(int position)
         {
             activeNode = activeNode->suffixLink;
         }
+        cout << "pExtendSuffixTree():4: " << suffixCount << endl;
     }
 }
 

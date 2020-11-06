@@ -1,0 +1,54 @@
+
+
+Source Files:
+=============
+20173071_Q2$ tree
+.
+├── Makefile
+├── README
+├── bin
+│   ├── README
+│   └── mxor
+├── obj
+│   ├── BinaryTRIE.o
+│   ├── Main.o
+│   └── README
+└── src
+    ├── BinaryTRIE.C
+    ├── BinaryTRIE.H
+    ├── Main.C
+    └── README
+
+3 directories, 11 files
+20173071_Q2$
+
+
+
+Compilation Run:
+20173071_Q2$ make clean; make
+Cleaning all the object files and binaries.
+rm -f core ./obj/BinaryTRIE.o ./obj/Main.o ./bin/mxor
+g++ -Wall -std=c++1z -c src/BinaryTRIE.C -o obj/BinaryTRIE.o
+Compiled src/BinaryTRIE.C successfully.
+g++ -Wall -std=c++1z -c src/Main.C -o obj/Main.o
+Compiled src/Main.C successfully.
+g++ ./obj/BinaryTRIE.o ./obj/Main.o -o bin/mxor
+Linking Complete.
+To start the "Expression Evaluator" run --> ./bin/mxor
+20173071_Q2$
+
+
+Execution:
+==========
+9 5
+1 2 3 4 5 6 7 8 9
+4
+5
+6
+7
+8
+Maximum XOR value is 4 XOR 9 : 13
+Maximum XOR value is 5 XOR 8 : 13
+Maximum XOR value is 6 XOR 9 : 15
+Maximum XOR value is 7 XOR 8 : 15
+Maximum XOR value is 8 XOR 7 : 15
