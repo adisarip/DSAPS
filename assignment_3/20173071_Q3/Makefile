@@ -21,7 +21,7 @@ OBJECTS := $(FILES:$(SRCDIR)/%.C=$(OBJDIR)/%.o)
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@
 	@echo "Linking Complete."
-	@echo "To start the \"Expression Evaluator\" run --> "$(BINDIR)"/"$(TARGET)
+	@echo "To start the \"External Sort\" run --> "$(BINDIR)"/"$(TARGET)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.C
 	$(CC) $(CCFLAGS) -c $< -o $@
