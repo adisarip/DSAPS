@@ -19,10 +19,10 @@ from math import ceil
 import sys
 import time
 
-n_values = 10_000_000
-n_digits = 4
+n_values = 10000000
+n_digits = 10
 default_seed = 1337
-BUFFER_SIZE = 100_000
+BUFFER_SIZE = 100000
 out_fname = "unsorted_file.txt"
 
 if __name__ == '__main__':

@@ -8,10 +8,12 @@
 #include <vector>
 using namespace std;
 
+#define ll long long
+
 class Node
 {
   public:
-    Node():leafValue(0)
+    Node():leafValue(-1)
     {
         child[0] = NULL;
         child[1] = NULL;
@@ -19,7 +21,7 @@ class Node
     ~Node(){};
 
     // data
-    uint64_t leafValue;
+    ll leafValue;
     Node* child[2];
 };
 
@@ -28,13 +30,11 @@ class BinaryTRIE
   public:
     BinaryTRIE();
     ~BinaryTRIE();
-
-    void buildBinaryTrie(vector<uint64_t>& a);
-    uint64_t computeMaximumXOR(uint64_t key, uint64_t& element);
+    void buildBinaryTrie(vector<ll>& a);
+    ll computeMaximumXOR(ll key, ll& element);
 
   protected:
-    void pInsert(uint64_t x); // insert a number in binary format into the TRIE data structure
-
+    void pInsert(ll x); // insert a number in binary format into the TRIE data structure
 
   protected:
     Node* root;

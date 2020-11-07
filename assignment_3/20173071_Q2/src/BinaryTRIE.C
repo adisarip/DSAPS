@@ -14,7 +14,7 @@ BinaryTRIE::~BinaryTRIE()
 {
 }
 
-void BinaryTRIE::buildBinaryTrie(vector<uint64_t>& a)
+void BinaryTRIE::buildBinaryTrie(vector<ll>& a)
 {
     // insert the input array into the TRIE in binary format
     for (auto x : a)
@@ -23,10 +23,10 @@ void BinaryTRIE::buildBinaryTrie(vector<uint64_t>& a)
     }
 }
 
-uint64_t BinaryTRIE::computeMaximumXOR(uint64_t key, uint64_t& element)
+ll BinaryTRIE::computeMaximumXOR(ll key, ll& element)
 {
     Node* sNode = root;
-    for (uint64_t i = SIZE-1; i > 0; i--)
+    for (ll i = SIZE-1; i > 0; i--)
     {
         bool current_bit = (key & (1 << i));
         if (sNode->child[1 - current_bit] != NULL)
@@ -44,12 +44,12 @@ uint64_t BinaryTRIE::computeMaximumXOR(uint64_t key, uint64_t& element)
 
 // protected member definitions
 
-void BinaryTRIE::pInsert(uint64_t value)
+void BinaryTRIE::pInsert(ll value)
 {
     Node* sNode = root;
     // insert the numbers in bitwise format into the TRIE
     // starting with the Most-Significant-Bit
-    for (uint64_t i = SIZE-1; i > 0; i--)
+    for (ll i = SIZE-1; i > 0; i--)
     {
         bool current_bit = (value & (1 << i));
         if (sNode->child[current_bit] == NULL)
