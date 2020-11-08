@@ -50,7 +50,7 @@ SuffixTree::SuffixTree(string textInput)
 SuffixTree::~SuffixTree()
 {
     // delete all the nodes from the Suffix Tree
-    //clear();
+    clear();
 }
 
 void SuffixTree::setInputString(string str)
@@ -217,49 +217,6 @@ SuffixTree::ActivePointStatus SuffixTree::pUpdateActivePoint(Node* currentNode)
     return sStatus;
 }
 
-/*
-void SuffixTree::buildSuffixArray(int arr[])
-{
-    int size = getStringLength() - 1;
-    for (int i=0; i < size; i++)
-    {
-        arr[i] = -1;
-    }
-    int index = 0;
-    pDoTraversalDFS(root, arr, &index);
-    cout << inputString << ":";
-    for (int i=0; i < size; i++)
-    {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
-}
-
-
-void SuffixTree::pDoTraversalDFS(Node* node, int arr[], int *index)
-{
-    int size = getStringLength() - 1;
-    if (node == NULL)
-    {
-        return;
-    }
-    if (node->suffixIndex == -1)
-    {
-        for (int i=0; i < MAX_CHAR_SET; i++)
-        {
-            if (node->child[i] != NULL)
-            {
-                pDoTraversalDFS(node->child[i], arr, index);
-            }
-        }
-    }
-    else if (node->suffixIndex > -1 && node->suffixIndex < size)
-    {
-        arr[(*index)++] = node->suffixIndex;
-    }
-}
-*/
-
 void SuffixTree::pDeleteNode(Node* node)
 {
     // algorithm for deleting the nodes.
@@ -272,8 +229,12 @@ void SuffixTree::pDeleteNode(Node* node)
     {
         if (node->child[i] != NULL)
         {
-            pDeleteNode(node);
+            pDeleteNode(node->child[i]);
         }
+    }
+    if (node->suffixIndex == -1)
+    {
+        delete(node->end);
     }
     delete(node);
 }

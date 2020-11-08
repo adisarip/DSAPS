@@ -1,4 +1,5 @@
 
+// SuffixArray class derived from SuffixTree
 
 #ifndef SUFFIXARRAY_H
 #define SUFFIXARRAY_H
@@ -12,7 +13,6 @@ class SuffixArray : public SuffixTree
   public:
     SuffixArray(string textInput);
     ~SuffixArray();
-
     void display();
 
     // string utilities using suffix array
@@ -24,7 +24,7 @@ class SuffixArray : public SuffixTree
     // Build the suffix array
     void pBuildSuffixArray();
     // perform A DFS traversal
-    void pDoComputeArrayUsingDFS(Node* node, int *index);
+    void pDoComputeArrayUsingDFS(Node* node, int& index);
 
     // data
     int size;

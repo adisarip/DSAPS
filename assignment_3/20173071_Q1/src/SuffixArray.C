@@ -39,8 +39,25 @@ string SuffixArray::getSmallestRotation()
 
 string SuffixArray::getLongestKSubstring(int k)
 {
-    string result = "";
-    return result;
+    map<string, int> sRepeatedStrings;
+    for (int i=0; i<size; i++)
+    {
+        string str = sArrayStrings[i].substr(0,k);
+        sRepeatedStrings[str]++;
+    }
+
+    int max_count = 0;
+    string max_string = "";
+    map<string, int>::iterator it;
+    for (it = sRepeatedStrings.begin(); it != sRepeatedStrings.end(); it++)
+    {
+        if (max_count < it->second)
+        {
+            max_count = it->second;
+            max_string = it->first;
+        }
+    }
+    return max_string;
 }
 
 string SuffixArray::getLongestPalindomicSubstring()
@@ -61,7 +78,7 @@ void SuffixArray::pBuildSuffixArray()
         sArray[i] = -1;
     }
     int index = 0;
-    pDoComputeArrayUsingDFS(root, &index);
+    pDoComputeArrayUsingDFS(root, index);
 
     string str = inputString.substr(0, size);
     for (int i=0; i<size; i++)
@@ -72,7 +89,7 @@ void SuffixArray::pBuildSuffixArray()
     }
 }
 
-void SuffixArray::pDoComputeArrayUsingDFS(Node* node, int* index)
+void SuffixArray::pDoComputeArrayUsingDFS(Node* node, int& index)
 {
     if (node == NULL)
     {
@@ -90,6 +107,7 @@ void SuffixArray::pDoComputeArrayUsingDFS(Node* node, int* index)
     }
     else if (node->suffixIndex > -1 && node->suffixIndex < size)
     {
-        sArray[(*index)++] = node->suffixIndex;
+        //sArray[(*index)++] = node->suffixIndex;
+        sArray[index++] = node->suffixIndex;
     }
 }

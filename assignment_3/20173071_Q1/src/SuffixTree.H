@@ -49,14 +49,12 @@ class SuffixTree
     // public interface
     void clear();
     void buildTree();
-    //void buildSuffixArray(int arr[]);
 
   protected:
     int pGetID(int position);
     void pSetSuffixIndex(Node* node, int index=0);
     void pExtendSuffixTree(int position);
     SuffixTree::ActivePointStatus pUpdateActivePoint(Node* currentNode);
-    //void pDoTraversalDFS(Node* node, int arr[], int *index);
     void pDeleteNode(Node* node);
 
     // Root Node of the Suffix Tree
