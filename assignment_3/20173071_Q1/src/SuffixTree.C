@@ -1,9 +1,21 @@
 // Implementation
 
 
-#include "Node.H"
 #include "SuffixTree.H"
+#include <iostream>
 using namespace std;
+
+Node::Node(int startIndex, int* endIndex, Node* node)
+:start(startIndex)
+,end(endIndex)
+,suffixIndex(-1)
+,suffixLink(node)
+{
+    for (int i=0; i < MAX_CHAR_SET; i++)
+    {
+        child[i] = NULL;
+    }
+}
 
 SuffixTree::SuffixTree()
 :root(NULL)
@@ -205,6 +217,7 @@ SuffixTree::ActivePointStatus SuffixTree::pUpdateActivePoint(Node* currentNode)
     return sStatus;
 }
 
+/*
 void SuffixTree::buildSuffixArray(int arr[])
 {
     int size = getStringLength() - 1;
@@ -245,6 +258,7 @@ void SuffixTree::pDoTraversalDFS(Node* node, int arr[], int *index)
         arr[(*index)++] = node->suffixIndex;
     }
 }
+*/
 
 void SuffixTree::pDeleteNode(Node* node)
 {

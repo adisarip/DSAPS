@@ -9,7 +9,22 @@
 #include <string>
 using namespace std;
 
-class Node;
+const int MAX_CHAR_SET = 100; // ASCII character set range is -> 0x00 to 0x5F
+
+class Node
+{
+  public:
+    int start;
+    int *end;
+    int suffixIndex;
+    Node* suffixLink;
+    Node* child[MAX_CHAR_SET];
+
+    Node(int startIndex, int* endIndex, Node* node = NULL);
+    ~Node(){};
+};
+
+
 class SuffixTree
 {
   public:
@@ -34,14 +49,14 @@ class SuffixTree
     // public interface
     void clear();
     void buildTree();
-    void buildSuffixArray(int arr[]);
+    //void buildSuffixArray(int arr[]);
 
   protected:
     int pGetID(int position);
     void pSetSuffixIndex(Node* node, int index=0);
     void pExtendSuffixTree(int position);
     SuffixTree::ActivePointStatus pUpdateActivePoint(Node* currentNode);
-    void pDoTraversalDFS(Node* node, int arr[], int *index);
+    //void pDoTraversalDFS(Node* node, int arr[], int *index);
     void pDeleteNode(Node* node);
 
     // Root Node of the Suffix Tree
