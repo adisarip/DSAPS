@@ -26,15 +26,28 @@ void SuffixArray::display()
         cout << sArray[i] << " ";
     }
     cout << endl;
+    cout << "\nAll Suffixes of the string '" << str << "':" << endl;
     for (int x=0; x<size; x++)
     {
-        cout << x << " : " << sArrayStrings[x] << endl;
+        cout << x << " : " << mSuffixes[x] << endl;
     }
+    cout << endl;
+}
+
+void SuffixArray::displayRotations()
+{
+    string str = inputString.substr(0, size);
+    cout << "All Rotations of the string '" << str << "':" << endl;
+    for (int x=0; x<size; x++)
+    {
+        cout << x << " : " << mRotations[x] << endl;
+    }
+    cout << endl;
 }
 
 string SuffixArray::getSmallestRotation()
 {
-    return sArrayStrings[sArray[0]];
+    return mRotations[sArray[0]];
 }
 
 string SuffixArray::getLongestKSubstring(int k)
@@ -42,7 +55,7 @@ string SuffixArray::getLongestKSubstring(int k)
     map<string, int> sRepeatedStrings;
     for (int i=0; i<size; i++)
     {
-        string str = sArrayStrings[i].substr(0,k);
+        string str = mRotations[i].substr(0,k);
         sRepeatedStrings[str]++;
     }
 
@@ -84,8 +97,10 @@ void SuffixArray::pBuildSuffixArray()
     for (int i=0; i<size; i++)
     {
         int index = sArray[i];
-        string aStr = str.substr(index, size - index) + str.substr(0, index);
-        sArrayStrings[index] = aStr;
+        string x = str.substr(index, size - index);
+        string y = str.substr(0, index);
+        mRotations[index] = x+y;
+        mSuffixes[index] = x;
     }
 }
 

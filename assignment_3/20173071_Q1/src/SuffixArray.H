@@ -14,6 +14,7 @@ class SuffixArray : public SuffixTree
     SuffixArray(string textInput);
     ~SuffixArray();
     void display();
+    void displayRotations();
 
     // string utilities using suffix array
     string getSmallestRotation();
@@ -29,7 +30,8 @@ class SuffixArray : public SuffixTree
     // data
     int size;
     int* sArray;
-    map<int, string> sArrayStrings;
+    map<int, string> mRotations;
+    map<int, string> mSuffixes;
 };
 
 
