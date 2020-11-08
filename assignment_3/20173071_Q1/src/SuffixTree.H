@@ -34,15 +34,14 @@ class SuffixTree
     // public interface
     void clear();
     void buildTree();
-    void displayTree();
-
+    void buildSuffixArray(int arr[]);
 
   protected:
+    int pGetID(int position);
     void pSetSuffixIndex(Node* node, int index=0);
     void pExtendSuffixTree(int position);
     SuffixTree::ActivePointStatus pUpdateActivePoint(Node* currentNode);
-    int pGetCharacterID(int position);
-    void pDisplay(Node* node, int index=0);
+    void pDoTraversalDFS(Node* node, int arr[], int *index);
     void pDeleteNode(Node* node);
 
     // Root Node of the Suffix Tree
@@ -57,6 +56,10 @@ class SuffixTree
     int    suffixCount;  // A count about how many suffixes yet to be added in the Tree
     int    nodesCount;   // Total number of nodes in the Suffix Tree
     string inputString;  // Input string for which we are creating the Suffix Tree
+    // additonal data members for use
+    int leafEnd;
+    int* rootEnd;
+    int* splitEnd;
 };
 
 #endif //SUFFIXTREE_H

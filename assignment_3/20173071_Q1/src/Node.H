@@ -13,16 +13,16 @@ class Node
 {
   public:
     int start;
-    int end;
+    int *end;
     int suffixIndex;
     Node* suffixLink;
     Node* child[MAX_CHAR_SET];
 
-    Node(int startIndex, int endIndex, Node* node = NULL);
+    Node(int startIndex, int* endIndex, Node* node = NULL);
     ~Node(){};
 };
 
-Node::Node(int startIndex, int endIndex, Node* node)
+Node::Node(int startIndex, int* endIndex, Node* node)
 :start(startIndex)
 ,end(endIndex)
 ,suffixIndex(-1)
