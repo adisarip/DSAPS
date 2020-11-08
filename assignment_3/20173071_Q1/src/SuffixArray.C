@@ -26,6 +26,11 @@ void SuffixArray::display()
         cout << sArray[i] << " ";
     }
     cout << endl;
+}
+
+void SuffixArray::displaySuffixes()
+{
+    string str = inputString.substr(0, size);
     cout << "\nAll Suffixes of the string '" << str << "':" << endl;
     for (int x=0; x<size; x++)
     {
@@ -52,25 +57,50 @@ string SuffixArray::getSmallestRotation()
 
 string SuffixArray::getLongestKSubstring(int k)
 {
+    if (k==1)
+    {
+        return inputString.substr(0, size);
+    }
+
+    int count = 0;
+    string ms;
+    for (int i=1; i<size-1; i++)
+    {
+        string s = pGetSubstring(i,count);
+        if (count >= k)
+        {
+            ms = s;
+            count = 0;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return ms;
+}
+
+string SuffixArray::pGetSubstring(int xsize, int& count)
+{
+    // xsize = size of the substring
     map<string, int> sRepeatedStrings;
     for (int i=0; i<size; i++)
     {
-        string str = mRotations[i].substr(0,k);
+        string str = mRotations[i].substr(0,xsize);
         sRepeatedStrings[str]++;
     }
 
-    int max_count = 0;
-    string max_string = "";
+    string max_sub_string = "";
     map<string, int>::iterator it;
     for (it = sRepeatedStrings.begin(); it != sRepeatedStrings.end(); it++)
     {
-        if (max_count < it->second)
+        if (count < it->second)
         {
-            max_count = it->second;
-            max_string = it->first;
+            count = it->second;
+            max_sub_string = it->first;
         }
     }
-    return max_string;
+    return max_sub_string;
 }
 
 string SuffixArray::getLongestPalindomicSubstring()

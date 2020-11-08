@@ -14,6 +14,7 @@ class SuffixArray : public SuffixTree
     SuffixArray(string textInput);
     ~SuffixArray();
     void display();
+    void displaySuffixes();
     void displayRotations();
 
     // string utilities using suffix array
@@ -22,6 +23,7 @@ class SuffixArray : public SuffixTree
     string getLongestPalindomicSubstring();
 
   protected:
+    string pGetSubstring(int xsize, int& count);
     // Build the suffix array
     void pBuildSuffixArray();
     // perform A DFS traversal

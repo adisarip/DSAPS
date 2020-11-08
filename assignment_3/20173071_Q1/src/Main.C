@@ -7,12 +7,30 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string s("banana$");
+    if (argc < 2)
+    {
+        cout << "Input String Missing !!!" << endl;
+        cout << "Usage: ./bin/scomp <input_string>" << endl;
+        return 1;
+    }
+
+    string s = string(argv[1]) + string("$");
     SuffixArray s_array(s);
     s_array.display();
-    s_array.displayRotations();
-    cout << "Q1a: Smallest Lexicographical Rotation of 'banana' : " << s_array.getSmallestRotation() << endl;
-    cout << "Q1b: Longest Substring appearing atleast '3' times : " << s_array.getLongestKSubstring(3) << endl;
-    cout  << endl;
+    //s_array.displaySuffixes();
+    //s_array.displayRotations();
+    cout << "Q1a: Smallest Lexicographical Rotation of '" << argv[1] << "' : " << s_array.getSmallestRotation() << endl;
+    int k=2;
+    string x = s_array.getLongestKSubstring(k);
+    int xsize = (x.length() > 0) ? x.length() : -1;
+    cout << "Q1b: Longest Substring appearing atleast '" << k << "' times : " << x << " | size=" << xsize << endl;
+    k=3;
+    x = s_array.getLongestKSubstring(k);
+    xsize = (x.length() > 0) ? x.length() : -1;
+    cout << "Q1b: Longest Substring appearing atleast '" << k << "' times : " << x << " | size=" << xsize << endl;
+    k=4;
+    x = s_array.getLongestKSubstring(k);
+    xsize = (x.length() > 0) ? x.length() : -1;
+    cout << "Q1b: Longest Substring appearing atleast '" << k << "' times : " << x << " | size=" << xsize << endl;
     return 0;
 }
