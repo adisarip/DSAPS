@@ -1,9 +1,11 @@
 
 
 #include "ExtSort.H"
+#include "MinHeap.H"
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <climits>
 using namespace std;
 
 ExtSort::ExtSort(string input,
@@ -20,6 +22,12 @@ ExtSort::~ExtSort()
 {
 }
 
+void ExtSort::cleanup()
+{
+    // clean all the temporary files created
+    string cmd = "rm ./data/*.dat";
+    system(cmd.c_str());
+}
 
 void ExtSort::sort()
 {
@@ -33,38 +41,40 @@ void ExtSort::pSplitAndProcess()
     ifstream fin;
     fin.open(iFile, ios::in);
     string value;
-    int index = 0;
-    fileCount = 1;
+    fileCount = 0;
+    bool inputFlag = true;
 
     // create an array to store numbers for merge sort
     // this dataChunk will be cleared once the numbers are sorted and flushed to a file
     ll* dataChunk = new ll[chunkSize]{};
 
-    while (fin)
+    while (inputFlag)
     {
-        getline(fin, value, ',');
-        if (index < chunkSize)
+        int index = 0;
+        while (index < chunkSize)
         {
-            dataChunk[index++] = stoll(value);
-            continue;
+            if (!fin.eof())
+            {
+                getline(fin, value, ',');
+                dataChunk[index] = stoll(value);
+            }
+            else
+            {
+                inputFlag = false;
+                break;
+            }
+            index++;
         }
 
-        // perform in-place merge sort on the data array
-        pMergeSort(dataChunk, 0, index-1);
-
-        // write the sorted part-data into a file
-        pWriteFile(dataChunk, chunkSize);
-        memset(dataChunk, 0, chunkSize * sizeof(ll));
-
-        fileCount++;
-        index = 0;
-    }
-
-    if (index > 0)
-    {
-        pMergeSort(dataChunk, 0, index-1);
-        pWriteFile(dataChunk, index);
-        index = 0;
+        if (index > 0)
+        {
+            fileCount++;
+            // perform merge sort on the data array
+            pMergeSort(dataChunk, 0, index-1);
+            // write the sorted part-data into a file
+            pWriteFile(dataChunk, index);
+            memset(dataChunk, 0, chunkSize * sizeof(ll));
+        }
     }
 
     fin.close();
@@ -73,6 +83,69 @@ void ExtSort::pSplitAndProcess()
 
 void ExtSort::pMergeFiles()
 {
+    ifstream fin[fileCount];
+    Node* heapArray = new Node[fileCount];
+
+    string sValue("");
+    int currentIndex;
+    // open the intermediate files and get the minimum element from each file to create the heap
+    for (currentIndex=0; currentIndex < fileCount; currentIndex++)
+    {
+        string filename = string("./data/") + to_string(currentIndex+1) + string(".dat");
+        fin[currentIndex].open(filename, ios::in);
+        if (!fin[currentIndex].eof())
+        {
+            getline(fin[currentIndex], sValue, ',');
+            heapArray[currentIndex].value = stoll(sValue);
+            heapArray[currentIndex].index = currentIndex;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // create the min heap
+    MinHeap minHeap(heapArray, currentIndex);
+
+    ofstream fout(oFile.c_str());
+    sValue = "";
+    bool isFirst = true;
+    // one-by-one get minimum element from min heap and replace it with the next element
+    for (int eofCount=0; eofCount != currentIndex;)
+    {
+        Node node = minHeap.getMinNode();
+        if (isFirst)
+        {
+            fout << node.value;
+            isFirst = false;
+        }
+        else
+        {
+            fout << "," << node.value;
+        }
+
+        if (!fin[node.index].eof())
+        {
+            getline(fin[node.index], sValue, ',');
+            node.value = stoll(sValue);
+        }
+        else
+        {
+            eofCount++;
+            node.value = LLONG_MAX;
+            fout.flush();
+        }
+
+        minHeap.replaceMinNode(node);
+    }
+
+    for (int i=0; i<fileCount; i++)
+    {
+        fin[i].close();
+    }
+    fout << endl;
+    fout.close();
 }
 
 void ExtSort::pMergeSort(ll data[], int left, int right)
@@ -95,15 +168,14 @@ void ExtSort::pMerge(ll data[], int left, int mid, int right)
 
     for (int i=0; i < leftCount; i++)
     {
-        leftData[i] = data[leftCount + i];
+        leftData[i] = data[left + i];
     }
     for (int j=0; j < rightCount; j++)
     {
-        rightData[j] = data[mid + 1];
+        rightData[j] = data[mid + 1 + j];
     }
 
-    int i = 0;
-    int j = 0;
+    int i = 0, j = 0;
     int k = left;
     while(i < leftCount && j < rightCount)
     {
@@ -116,11 +188,13 @@ void ExtSort::pMerge(ll data[], int left, int mid, int right)
             data[k++] = rightData[j++];
         }
     }
+
+    // copy the remaining elements
     while (i < leftCount)
     {
         data[k++] = leftData[i++];
     }
-    while (i < rightCount)
+    while (j < rightCount)
     {
         data[k++] = rightData[j++];
     }
@@ -128,7 +202,7 @@ void ExtSort::pMerge(ll data[], int left, int mid, int right)
 
 void ExtSort::pWriteFile(ll dataChunk[], int size)
 {
-    string filename = string("./data/") + to_string(fileCount);
+    string filename = string("./data/") + to_string(fileCount) + string(".dat");
     ofstream fout(filename.c_str());
     for (int i=0; i < size; i++)
     {

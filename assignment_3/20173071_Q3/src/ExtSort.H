@@ -19,6 +19,7 @@ class ExtSort
 
     // function to perform external sort
     void sort();
+    void cleanup();
 
   protected:
     void pSplitAndProcess();
