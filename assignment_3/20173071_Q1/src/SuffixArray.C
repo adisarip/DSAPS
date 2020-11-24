@@ -2,6 +2,7 @@
 
 #include "SuffixArray.H"
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 SuffixArray::SuffixArray(string textInput)
@@ -80,6 +81,96 @@ string SuffixArray::getLongestKSubstring(int k)
     return ms;
 }
 
+void SuffixArray::getLongestPalindomicSubstring()
+{
+    string s = inputString.substr(0, size);
+    string r = string(s.rbegin(), s.rend());
+    string x = s + "#" + r + "$";
+    pRebuildSuffixArray(x);
+    pGetPalindromicSubstring();
+
+    if (mPalindromes.size() > 0)
+    {
+        for (auto x : mPalindromes)
+        {
+            cout << x << " ";
+        }
+        cout << endl;
+    }
+}
+
+void SuffixArray::pRebuildSuffixArray(string x)
+{
+    clear();
+    setInputString(x);
+    size = x.length() - 1;
+    sArray = new int[size];
+    pBuildSuffixArray();
+}
+
+// Protected member definitions
+
+void SuffixArray::pGetPalindromicSubstring()
+{
+    // populate the mPalindromes with all the palindromes possible
+    int max_size = 0;
+    for (int i=0; i < (int)mSuffixes.size(); i++)
+    {
+        string s = pGetCommonPrefix(i);
+        if (pIsPalindrome(s))
+        {
+            if (max_size < (int)s.length())
+            {
+                mPalindromes.clear();
+                mPalindromes.push_back(s);
+                max_size = s.length();
+            }
+            else if (max_size == (int)s.length())
+            {
+                cout << "P: " << s;
+                mPalindromes.push_back(s);
+            }
+        }
+        //cout << setw(2) << i << " : " << setw(2) << sArray[i] << " : " << mSuffixes[sArray[i]] << endl;
+    }
+    cout << endl;
+}
+
+bool SuffixArray::pIsPalindrome(string x)
+{
+    int start = 0;
+    int end = x.length()-1;
+    bool isPalindrome = (start == end) ? true : false;
+    while (x[start++] == x[end--])
+    {
+        if (end - start == 0 || end - start == 1)
+        {
+            isPalindrome = true;
+        }
+    }
+    return isPalindrome;
+}
+
+string SuffixArray::pGetCommonPrefix(int index)
+{
+    string x = "";
+    string s1 = mSuffixes[sArray[index]];
+    string s2 = mSuffixes[sArray[index+1]];
+    int len = (s1.length() > s2.length()) ? s2.length() : s1.length();
+    for (int i=0; i<len; i++)
+    {
+        if (s1[i] == s2[i])
+        {
+            x += s1[i];
+        }
+        else
+        {
+            break;
+        }
+    }
+    return x;
+}
+
 string SuffixArray::pGetSubstring(int xsize, int& count)
 {
     // xsize = size of the substring
@@ -102,14 +193,6 @@ string SuffixArray::pGetSubstring(int xsize, int& count)
     }
     return max_sub_string;
 }
-
-string SuffixArray::getLongestPalindomicSubstring()
-{
-    string result = "";
-    return result;
-}
-
-// Protected member definitions
 
 void SuffixArray::pBuildSuffixArray()
 {

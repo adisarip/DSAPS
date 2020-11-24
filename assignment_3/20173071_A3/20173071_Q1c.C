@@ -6,10 +6,11 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include <string>
 using namespace std;
 
-const int MAX_CHAR_SET = 100; // ASCII character set range is -> 0x00 to 0x5F
+const int MAX_CHAR_SET = 256; // Character set range
 
 class Node
 {
@@ -329,6 +330,10 @@ class SuffixArray : public SuffixTree
 
   protected:
     string pGetSubstring(int xsize, int& count);
+    void pGetPalindromicSubstring();
+    bool pIsPalindrome(string x);
+    string pGetCommonPrefix(int index);
+
     // Build the suffix array
     void pBuildSuffixArray();
     // perform A DFS traversal
@@ -339,6 +344,7 @@ class SuffixArray : public SuffixTree
     int* sArray;
     map<int, string> mRotations;
     map<int, string> mSuffixes;
+    vector<string> mPalindromes;
 };
 
 
@@ -443,11 +449,81 @@ string SuffixArray::pGetSubstring(int xsize, int& count)
 
 string SuffixArray::getLongestPalindomicSubstring()
 {
-    string result = "";
-    return result;
+    pGetPalindromicSubstring();
+
+    string ps = "";
+    if (mPalindromes.size() > 0)
+    {
+        ps = mPalindromes[0];
+        cout << "List of all palindrome strings: ";
+        for (auto x : mPalindromes)
+        {
+            cout << x << " ";
+        }
+        cout << endl;
+    }
+    return ps;
 }
 
 // Protected member definitions
+
+void SuffixArray::pGetPalindromicSubstring()
+{
+    // populate the mPalindromes with all the palindromes possible
+    int max_size = 0;
+    for (int i=0; i < (int)mSuffixes.size(); i++)
+    {
+        string s = pGetCommonPrefix(i);
+        if (pIsPalindrome(s))
+        {
+            if (max_size < (int)s.length())
+            {
+                mPalindromes.clear();
+                mPalindromes.push_back(s);
+                max_size = s.length();
+            }
+            else if (max_size == (int)s.length())
+            {
+                mPalindromes.push_back(s);
+            }
+        }
+    }
+}
+
+bool SuffixArray::pIsPalindrome(string x)
+{
+    int start = 0;
+    int end = x.length()-1;
+    bool isPalindrome = (start == end) ? true : false;
+    while (x[start++] == x[end--])
+    {
+        if (end - start == 0 || end - start == 1)
+        {
+            isPalindrome = true;
+        }
+    }
+    return isPalindrome;
+}
+
+string SuffixArray::pGetCommonPrefix(int index)
+{
+    string x = "";
+    string s1 = mSuffixes[sArray[index]];
+    string s2 = mSuffixes[sArray[index+1]];
+    int len = (s1.length() > s2.length()) ? s2.length() : s1.length();
+    for (int i=0; i<len; i++)
+    {
+        if (s1[i] == s2[i])
+        {
+            x += s1[i];
+        }
+        else
+        {
+            break;
+        }
+    }
+    return x;
+}
 
 void SuffixArray::pBuildSuffixArray()
 {
@@ -506,9 +582,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    string s = string(argv[1]) + string("$");
-    SuffixArray s_array(s);
+    string s = string(argv[1]);
+    string r = string(s.rbegin(), s.rend());
+    string x = s + "#" + r + "$";
+    SuffixArray s_array(x);
     s_array.display();
-    cout << "Q1c: Longest Palindromic Substring of '" << argv[1] << "' : " << s_array.getLongestPalindomicSubstring() << endl;
+    string ps = s_array.getLongestPalindomicSubstring();
+    cout << "Q1c: Longest Palindromic Substring of '" << argv[1] << "' : " << ps << endl;
     return 0;
 }

@@ -32,5 +32,8 @@ int main(int argc, char *argv[])
     x = s_array.getLongestKSubstring(k);
     xsize = (x.length() > 0) ? x.length() : -1;
     cout << "Q1b: Longest Substring appearing atleast '" << k << "' times : " << x << " | size=" << xsize << endl;
+
+    //s_array.getLongestPalindomicSubstring();
+
     return 0;
 }

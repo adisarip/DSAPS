@@ -6,6 +6,7 @@
 
 #include "SuffixTree.H"
 #include <map>
+#include <vector>
 using namespace std;
 
 class SuffixArray : public SuffixTree
@@ -20,10 +21,14 @@ class SuffixArray : public SuffixTree
     // string utilities using suffix array
     string getSmallestRotation();
     string getLongestKSubstring(int k);
-    string getLongestPalindomicSubstring();
+    void getLongestPalindomicSubstring();
 
   protected:
     string pGetSubstring(int xsize, int& count);
+    void pRebuildSuffixArray(string x);
+    bool pIsPalindrome(string x);
+    string pGetCommonPrefix(int index);
+    void pGetPalindromicSubstring();
     // Build the suffix array
     void pBuildSuffixArray();
     // perform A DFS traversal
@@ -34,6 +39,7 @@ class SuffixArray : public SuffixTree
     int* sArray;
     map<int, string> mRotations;
     map<int, string> mSuffixes;
+    vector<string> mPalindromes;
 };
 
 
